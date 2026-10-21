@@ -66,6 +66,9 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.2 (21/10/2026)**: trouxe do app do escritório os links, localização, contato e reações no
+  balão da conversa (`texto_rico.dart`, `localizacao.dart`) e a lista sem anel nas não lidas. Assinatura
+  conferida igual à do 1.0.1 (apksigner) antes de publicar; 1.0.1 guardado em /root/backups/sent-app-1.0.2-2026-10-21/.
 
 ## Padrão de código
 
