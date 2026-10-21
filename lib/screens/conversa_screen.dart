@@ -13,8 +13,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../api.dart';
 import '../audio_pendente.dart';
+import '../localizacao.dart';
 import '../rascunhos.dart';
 import '../models.dart';
+import '../texto_rico.dart';
 import '../theme.dart';
 import '../widgets.dart';
 
@@ -150,6 +152,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
       final novas = detalhe.mensagens.where((m) => m.id > _ultimoId).toList();
       setState(() {
         _conversa = detalhe.conversa;
+        detalhe.aplicarEm(_mensagens);
         _mensagens.addAll(novas);
         _carregou = true;
         _erro = null;
@@ -1279,6 +1282,18 @@ class _Balao extends StatelessWidget {
                     ),
                   ),
                 _conteudo(context, escuroNoBalao),
+                if (mensagem.reacao.isNotEmpty && !mensagem.apagada)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: (escuroNoBalao ? Colors.white : Colors.black).withValues(alpha: .09),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(mensagem.reacao, style: const TextStyle(fontSize: 15)),
+                    ),
+                  ),
                 const SizedBox(height: 3),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -1314,7 +1329,10 @@ class _Balao extends StatelessWidget {
       return const Text('Mensagem apagada', style: TextStyle(fontStyle: FontStyle.italic));
     }
     final url = mensagem.midiaUrl.isEmpty ? '' : EcoApi.instancia.urlAbsoluta(mensagem.midiaUrl);
-    final legenda = mensagem.conteudo.isNotEmpty ? Padding(padding: const EdgeInsets.only(top: 6), child: Text(mensagem.conteudo)) : null;
+    final corLink = claroSobreEscuro ? Colors.white : context.cores.destaque;
+    final legenda = mensagem.conteudo.isNotEmpty
+        ? Padding(padding: const EdgeInsets.only(top: 6), child: TextoRico(mensagem.conteudo, corLink: corLink))
+        : null;
     switch (mensagem.tipo) {
       case 'imagem':
       case 'sticker':
@@ -1359,8 +1377,12 @@ class _Balao extends StatelessWidget {
         );
       case 'documento':
         return _Anexo(icone: Icons.description_outlined, texto: mensagem.conteudo.isNotEmpty ? mensagem.conteudo : 'Documento', url: url);
+      case 'localizacao':
+        return _CartaoLocalizacao(localizacao: lerLocalizacao(mensagem.conteudo), claro: claroSobreEscuro);
+      case 'contato':
+        return _CartaoContato(conteudo: mensagem.conteudo, claro: claroSobreEscuro);
       default:
-        return Text(mensagem.conteudo);
+        return TextoRico(mensagem.conteudo, corLink: corLink);
     }
   }
 }
@@ -1567,6 +1589,147 @@ class _FotoCheia extends StatelessWidget {
             errorBuilder: (_, _, _) => const Text('Imagem indisponível', style: TextStyle(color: Colors.white70)),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CartaoLocalizacao extends StatelessWidget {
+  const _CartaoLocalizacao({required this.localizacao, required this.claro});
+
+  final Localizacao localizacao;
+  final bool claro;
+
+  Future<void> _abrir(BuildContext context) async {
+    for (final destino in enderecosDoMapa(localizacao)) {
+      try {
+        if (await launchUrl(destino, mode: LaunchMode.externalApplication)) {
+          return;
+        }
+      } catch (_) {}
+    }
+    if (context.mounted) {
+      mostrarAviso(context, 'Nenhum aplicativo de mapa para abrir a localização.');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.cores;
+    final temPonto = localizacao.latitude != null && localizacao.longitude != null;
+    final suave = claro ? Colors.white70 : c.textoSuave;
+    final destaque = claro ? Colors.white : c.destaque;
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: temPonto ? () => _abrir(context) : null,
+      child: Container(
+        width: 240,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: (claro ? Colors.white : Colors.black).withValues(alpha: .07),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(color: destaque.withValues(alpha: .16), borderRadius: BorderRadius.circular(12)),
+              child: Icon(Icons.location_on, color: destaque),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    localizacao.lugar.isNotEmpty ? localizacao.lugar : 'Localização',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    temPonto ? 'Toque para abrir no mapa' : 'O ponto no mapa não chegou. Peça para reenviar.',
+                    style: TextStyle(fontSize: 12, color: suave),
+                  ),
+                ],
+              ),
+            ),
+            if (temPonto) Icon(Icons.open_in_new, size: 18, color: suave),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CartaoContato extends StatelessWidget {
+  const _CartaoContato({required this.conteudo, required this.claro});
+
+  final String conteudo;
+  final bool claro;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.cores;
+    final linhas = conteudo.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty).toList();
+    final telefones = linhas.where((l) => RegExp(r'\d').allMatches(l).length >= 8 && RegExp(r'^[\d\s()+.-]+$').hasMatch(l)).toList();
+    final nomes = linhas.where((l) => !telefones.contains(l)).toList();
+    final suave = claro ? Colors.white70 : c.textoSuave;
+    final destaque = claro ? Colors.white : c.destaque;
+    return Container(
+      width: 240,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: (claro ? Colors.white : Colors.black).withValues(alpha: .07),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.account_circle, size: 34, color: destaque),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  nomes.isNotEmpty ? nomes.join(' · ') : 'Contato compartilhado',
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+          for (final telefone in telefones)
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () async {
+                final numero = telefone.replaceAll(RegExp(r'[^\d+]'), '');
+                if (!await launchUrl(Uri(scheme: 'tel', path: numero)) && context.mounted) {
+                  mostrarAviso(context, 'Não foi possível abrir o discador.');
+                }
+              },
+              onLongPress: () {
+                Clipboard.setData(ClipboardData(text: telefone));
+                mostrarAviso(context, 'Número copiado.');
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  children: [
+                    Icon(Icons.call, size: 18, color: destaque),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(telefone, style: TextStyle(color: destaque, fontWeight: FontWeight.w600))),
+                  ],
+                ),
+              ),
+            ),
+          if (telefones.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text('Toque para ligar · segure para copiar', style: TextStyle(fontSize: 11.5, color: suave)),
+            ),
+        ],
       ),
     );
   }

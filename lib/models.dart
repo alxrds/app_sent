@@ -173,6 +173,7 @@ class Mensagem {
     required this.apagada,
     required this.status,
     required this.criadoEm,
+    this.reacao = '',
   });
 
   factory Mensagem.deJson(Map<String, dynamic> j) => Mensagem(
@@ -193,6 +194,7 @@ class Mensagem {
     apagada: j['apagada_em'] != null,
     status: _texto(j['status']),
     criadoEm: dataDoServidor(j['criado_em']),
+    reacao: _texto(j['reacao']),
   );
 
   final int id;
@@ -201,17 +203,18 @@ class Mensagem {
   final String autor;
   final String autorNome;
   final String tipo;
-  final String conteudo;
-  final String midiaUrl;
-  final String midiaMime;
+  String conteudo;
+  String midiaUrl;
+  String midiaMime;
   final String citaPrevia;
   final String citaDe;
   final String citaWaId;
-  final String transcricao;
+  String transcricao;
   final bool interna;
-  final bool apagada;
-  final String status;
+  bool apagada;
+  String status;
   final DateTime? criadoEm;
+  String reacao;
 
   bool get enviada => direcao == 'saida';
   bool get evento => tipo == 'evento';
@@ -224,15 +227,56 @@ class Mensagem {
 }
 
 class DetalheConversa {
-  DetalheConversa({required this.conversa, required this.mensagens});
+  DetalheConversa({required this.conversa, required this.mensagens, this.atualizacoes = const {}});
 
   factory DetalheConversa.deJson(Map<String, dynamic> j) => DetalheConversa(
     conversa: Conversa.deJson((j['conversa'] as Map).cast<String, dynamic>()),
     mensagens: (j['mensagens'] as List? ?? []).map((m) => Mensagem.deJson((m as Map).cast<String, dynamic>())).toList(),
+    atualizacoes: {
+      for (final chave in const ['recentesStatus', 'midiaRecente', 'reacoesRecentes', 'apagadasRecentes', 'transcricoesRecentes'])
+        chave: (j[chave] as List? ?? []).whereType<Map>().map((m) => m.cast<String, dynamic>()).toList(),
+    },
   );
 
   final Conversa conversa;
   final List<Mensagem> mensagens;
+  final Map<String, List<Map<String, dynamic>>> atualizacoes;
+
+  bool aplicarEm(List<Mensagem> lista) {
+    final porId = {for (final m in lista) m.id: m};
+    final porWa = {for (final m in lista) if (m.waMessageId.isNotEmpty) m.waMessageId: m};
+    var mudou = false;
+    void trocar<T>(T atual, T novo, void Function(T) gravar) {
+      if (atual != novo) {
+        gravar(novo);
+        mudou = true;
+      }
+    }
+
+    for (final a in atualizacoes['recentesStatus'] ?? const <Map<String, dynamic>>[]) {
+      final m = porWa[_texto(a['wa_message_id'])];
+      if (m != null && _texto(a['status']).isNotEmpty) trocar(m.status, _texto(a['status']), (v) => m.status = v);
+    }
+    for (final a in atualizacoes['midiaRecente'] ?? const <Map<String, dynamic>>[]) {
+      final m = porId[_int(a['id'])];
+      if (m == null) continue;
+      trocar(m.midiaUrl, _texto(a['midia_url']), (v) => m.midiaUrl = v);
+      trocar(m.midiaMime, _texto(a['midia_mime']), (v) => m.midiaMime = v);
+    }
+    for (final a in atualizacoes['reacoesRecentes'] ?? const <Map<String, dynamic>>[]) {
+      final m = porId[_int(a['id'])];
+      if (m != null) trocar(m.reacao, _texto(a['reacao']), (v) => m.reacao = v);
+    }
+    for (final a in atualizacoes['apagadasRecentes'] ?? const <Map<String, dynamic>>[]) {
+      final m = porId[_int(a['id'])];
+      if (m != null) trocar(m.apagada, true, (v) => m.apagada = v);
+    }
+    for (final a in atualizacoes['transcricoesRecentes'] ?? const <Map<String, dynamic>>[]) {
+      final m = porId[_int(a['id'])];
+      if (m != null && _texto(a['transcricao']).isNotEmpty) trocar(m.transcricao, _texto(a['transcricao']), (v) => m.transcricao = v);
+    }
+    return mudou;
+  }
 }
 
 class Opcao {
