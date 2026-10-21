@@ -315,7 +315,7 @@ class _ItemConversa extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    AvatarContato(nome: conversa.contatoNome, fotoUrl: conversa.fotoUrl, tamanho: 50, anel: naoLida ? c.destaque : null),
+                    AvatarContato(nome: conversa.contatoNome, fotoUrl: conversa.fotoUrl, tamanho: 50),
                     if (conversa.interna)
                       Positioned(
                         right: 0,
