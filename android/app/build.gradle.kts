@@ -25,6 +25,12 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
+    packaging {
+        jniLibs {
+            excludes += listOf("lib/x86_64/**", "lib/x86/**")
+        }
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "br.app.sent"
