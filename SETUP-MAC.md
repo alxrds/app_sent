@@ -55,3 +55,11 @@ Depois do TestFlight: textos, capturas e privacidade próprios do Sent na App St
 - **2026-10-22 (Windows)** — Firebase próprio `sent-f3fb8` (criado pelo Alexandre); apps Android e iOS
   `br.app.sent` cadastrados pela API. Android 1.0.3 com push na UAU Store. iOS preparado (7bb0f99).
   Decisão do Alexandre: Sent e ejur separados em tudo, inclusive a chave APNs.
+- **2026-10-22 (Mac)** — Passos 1, 2 e 4 do PRÓXIMO. Chave APNs própria "Push Sent" criada
+  (Sandbox & Production, Team Scoped) e enviada ao Firebase `sent-f3fb8`; o `.p8` e o Key ID
+  ficam só no Mac, em `_firebase/` (fora do git — ver `_firebase/LEIA-ME.txt`). `flutter analyze`
+  limpo, 18 testes ok. IPA **1.0.4 (5)** gerado com `./scripts/ipa.sh` (a exportação registrou o
+  App ID `br.app.sent` com push). Conferido no IPA: `aps-environment=production`,
+  `GoogleService-Info.plist` do `sent-f3fb8`, `UIDeviceFamily` só `1`. Falta: criar o app no
+  App Store Connect (passo 3), enviar pelo Transporter e liberar no grupo interno; depois
+  testar push no iPhone (passo 5). Cópia do `.p8` no OneDrive pessoal: a fazer pelo Alexandre.
