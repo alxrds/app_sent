@@ -39,9 +39,10 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   `android/app/google-services.json` versionado (não é segredo) e plugin `com.google.gms.google-services`
   de volta no `build.gradle.kts`. Chave da conta de serviço: `_firebase/sent-firebase.json` (fora do git) e
   `storage/firebase-servico.json` (600, `sentsac`) no servidor do Sent — vale para todos os tenants; o
-  `Notificador` já obtém o token de acesso do FCM. **iOS**: `ios/Runner/GoogleService-Info.plist` está na
-  pasta mas ainda não entrou no target Runner do Xcode; falta isso (no Mac), a chave APNs no console do
-  Firebase e o build com `--dart-define=IOS_PUSH_ENABLED=true`.
+  `Notificador` já obtém o token de acesso do FCM. **iOS** (7bb0f99, 22/10): `GoogleService-Info.plist` no target, `Runner.entitlements` só com
+  `aps-environment`, `UIBackgroundModes` remote-notification, só iPhone e `scripts/ipa.sh` (liga
+  `IOS_PUSH_ENABLED=true`) — iguais ao app do escritório. Falta, no Mac: chave APNs (`HT4RSBKU7H`) no
+  Firebase do Sent, app no App Store Connect e o primeiro IPA (passo 5 do SETUP-MAC.md do app_ecossistema).
 
 ## Testar
 
