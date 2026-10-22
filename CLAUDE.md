@@ -69,6 +69,9 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.4 (22/10/2026)**: APK sem as bibliotecas de emulador (`packaging.jniLibs.excludes` x86/x86_64 no
+  `build.gradle.kts` — o `abiFilters` não funciona, o plugin do Flutter ignora), 55,5 → 49,3 MB. O resto do
+  tamanho é o motor do Flutter + código em 2 arquiteturas (~36 MB) e o leitor de QR do ML Kit embutido (~8 MB).
 - **1.0.3 (22/10/2026)**: notificações (Firebase `sent-f3fb8`). Assinatura conferida igual; 1.0.2 guardado em
   /root/backups/sent-app-1.0.3-2026-10-22/.
 - **1.0.2 (21/10/2026)**: trouxe do app do escritório os links, localização, contato e reações no
