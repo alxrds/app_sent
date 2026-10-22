@@ -33,13 +33,15 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   chamar rota `/gestao/*`: no Sent ela devolve 401 e o app desconecta o
   celular — a única exceção é `/gestao/notificacoes/json` (sininho), que o
   servidor do Sent libera pra área de atendimento.
-- **Push desligado**: ainda não existe projeto Firebase do Sent. O plugin
-  `com.google.gms.google-services` foi tirado do `android/app/build.gradle.kts`
-  (sem `google-services.json` o build falha) e no iOS o push só liga com
-  `--dart-define=IOS_PUSH_ENABLED=true`. `lib/push.dart` cai fora sozinho
-  quando o Firebase não inicializa. Pra ligar: criar o app `br.app.sent` no
-  Firebase, pôr o `google-services.json`/`GoogleService-Info.plist`,
-  voltar o plugin e configurar o envio no servidor do Sent.
+- **Push (Firebase, desde 2026-10-22, Android)**: projeto Firebase próprio **`sent-f3fb8`** (conta
+  Google da UAU; separado do `ecossistema-juridico-644f5` do app do escritório, a pedido do usuário).
+  Apps cadastrados pela API com a conta de serviço: Android `br.app.sent` e iOS `br.app.sent`.
+  `android/app/google-services.json` versionado (não é segredo) e plugin `com.google.gms.google-services`
+  de volta no `build.gradle.kts`. Chave da conta de serviço: `_firebase/sent-firebase.json` (fora do git) e
+  `storage/firebase-servico.json` (600, `sentsac`) no servidor do Sent — vale para todos os tenants; o
+  `Notificador` já obtém o token de acesso do FCM. **iOS**: `ios/Runner/GoogleService-Info.plist` está na
+  pasta mas ainda não entrou no target Runner do Xcode; falta isso (no Mac), a chave APNs no console do
+  Firebase e o build com `--dart-define=IOS_PUSH_ENABLED=true`.
 
 ## Testar
 
@@ -66,6 +68,8 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.3 (22/10/2026)**: notificações (Firebase `sent-f3fb8`). Assinatura conferida igual; 1.0.2 guardado em
+  /root/backups/sent-app-1.0.3-2026-10-22/.
 - **1.0.2 (21/10/2026)**: trouxe do app do escritório os links, localização, contato e reações no
   balão da conversa (`texto_rico.dart`, `localizacao.dart`) e a lista sem anel nas não lidas. Assinatura
   conferida igual à do 1.0.1 (apksigner) antes de publicar; 1.0.1 guardado em /root/backups/sent-app-1.0.2-2026-10-21/.
