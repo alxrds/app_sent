@@ -42,8 +42,29 @@ só iPhone e `scripts/ipa.sh` (liga `IOS_PUSH_ENABLED=true`). Versão 1.0.3+4.
    celular → código) e pedir ao Windows uma notificação de teste pelo servidor. O demo do
    Sent não tem WhatsApp ligado.
 
-Depois do TestFlight: textos, capturas e privacidade próprios do Sent na App Store
-(política em `https://sent.app.br/politica-de-privacidade.html`).
+## Para o Windows: publicar na App Store (22/10)
+
+Todo build enviado pelo Transporter cai no TestFlight. Não há como evitar isso, mas não é
+obrigatório liberar para testadores: dá para escolher o build direto na versão da App Store
+e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store Connect
+(navegador), como foi no app do escritório:
+
+1. **Página do Sent na loja**, tudo próprio do Sent (nada copiado do ejur):
+   - descrição, palavras-chave, categoria (Negócios) e URL de suporte;
+   - política de privacidade `https://sent.app.br/politica-de-privacidade.html` e o
+     questionário de privacidade do app;
+   - classificação etária, preço (grátis) e países;
+   - "Informação de revisão": login pelo código de revisão no demo do Sent (como o
+     `APP_REVISAO_CODIGO` do ejur). Confirmar que esse código existe no demo do Sent.
+2. **Capturas de iPhone 6,9"** (1320×2868), tiradas do Simulador logado no **demo do Sent**,
+   nunca em cliente real. O Simulador só existe no Mac: o Windows prepara o demo e anota aqui
+   quais telas quer; o Mac tira e faz commit em `design/app-store/iphone-6.9/`.
+3. **Teste em iPhone real (recomendado, não obrigatório):** push e leitor de QR do Sent
+   nunca rodaram num iPhone e o Simulador não testa nenhum dos dois. Enquanto os itens 1 e 2
+   são preenchidos, liberar o build num grupo do TestFlight com um cliente do Sent que use
+   iPhone (como foi com a Dra. Daniella no ejur). Se o Alexandre preferir pular, enviar
+   direto: o push do ejur, feito do mesmo jeito, passou na revisão.
+4. Selecionar o build **1.0.4 (5)** na versão 1.0.4 e enviar para revisão. Registrar aqui.
 
 ## Regras
 
