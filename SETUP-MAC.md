@@ -87,3 +87,7 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
 - **2026-10-22 (Windows)** — Código de revisão próprio do Sent criado no demo (`APP_REVISAO_CODIGO=ZYZB9DQ6`,
   `APP_REVISAO_EMAIL=admin@demo.sent.app.br`, só dados fictícios) e testado. Próximo: o Alexandre cria o app
   no App Store Connect (passo 3); depois o Mac envia o 1.0.4 (5) pelo Transporter.
+- **2026-10-22 (Windows)** — App **Sent** criado no App Store Connect pelo Alexandre (aparece como "iOS 1.0
+  Preparar para envio"). **Mac: enviar o IPA 1.0.4 (5) pelo Transporter** e liberar no grupo interno do
+  TestFlight; registrar aqui. A versão da loja foi criada como 1.0 — o Windows pede ao Alexandre para trocar
+  para 1.0.4 (precisa bater com o build). Países: só Brasil (evita a exigência de comerciante da UE).
