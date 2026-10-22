@@ -48,7 +48,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
 
 - `flutter analyze` e `flutter test` limpos; `flutter build apk --debug`
   compila (Flutter do Windows em `C:\src\flutter`).
-- Conta de teste: `demo.sent.app.br` (dados fictícios). Gerar o código em
+- Conta de teste: `demo.sent.app.br` (dados fictícios). Código fixo de revisão da Apple: `ZYZB9DQ6` (Digitar código, empresa `demo.sent.app.br`; entra como admin@demo.sent.app.br). Gerar o código em
   Meu perfil → Aplicativo no celular e usar **Digitar código** (empresa
   `demo.sent.app.br`). O demo **ainda não tem** o código fixo de revisão das
   lojas (`APP_REVISAO_CODIGO`/`APP_REVISAO_EMAIL` no `tenants/demo.env`) —

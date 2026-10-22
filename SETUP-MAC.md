@@ -54,8 +54,8 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
    - política de privacidade `https://sent.app.br/politica-de-privacidade.html` e o
      questionário de privacidade do app;
    - classificação etária, preço (grátis) e países;
-   - "Informação de revisão": login pelo código de revisão no demo do Sent (como o
-     `APP_REVISAO_CODIGO` do ejur). Confirmar que esse código existe no demo do Sent.
+   - "Informação de revisão": no app, **Digitar código** → Empresa `demo.sent.app.br`, código
+     **`ZYZB9DQ6`** (próprio do Sent, criado em 22/10; entra como o admin fictício do demo).
 2. **Capturas de iPhone 6,9"** (1320×2868), tiradas do Simulador logado no **demo do Sent**,
    nunca em cliente real. O Simulador só existe no Mac: o Windows prepara o demo e anota aqui
    quais telas quer; o Mac tira e faz commit em `design/app-store/iphone-6.9/`.
@@ -84,3 +84,6 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   `GoogleService-Info.plist` do `sent-f3fb8`, `UIDeviceFamily` só `1`. Falta: criar o app no
   App Store Connect (passo 3), enviar pelo Transporter e liberar no grupo interno; depois
   testar push no iPhone (passo 5). Cópia do `.p8` no OneDrive pessoal: a fazer pelo Alexandre.
+- **2026-10-22 (Windows)** — Código de revisão próprio do Sent criado no demo (`APP_REVISAO_CODIGO=ZYZB9DQ6`,
+  `APP_REVISAO_EMAIL=admin@demo.sent.app.br`, só dados fictícios) e testado. Próximo: o Alexandre cria o app
+  no App Store Connect (passo 3); depois o Mac envia o 1.0.4 (5) pelo Transporter.
