@@ -58,7 +58,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
 
 ## Distribuição
 
-- **Android, fora da loja**: `https://uau.dev.br/apk/sent` (UAU Store;
+- **Android, fora da loja**: `https://uau.dev.br/app/sent` (UAU Store;
   catálogo em `UAU/uau/config/apps.php`, APK em `UAU/uau/public/apks/sent.apk`,
   fora do git). Build: `flutter build apk --release --target-platform
   android-arm,android-arm64`, subir o `app-release.apk` como `sent.apk` e
