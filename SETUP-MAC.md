@@ -125,3 +125,5 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   nenhuma conversa do demo tem anexo. **03**: as respostas rápidas do demo falam em "escritório" e têm o marcador
   "[endereço]" — vale corrigir no demo e refazer. Simulator.app não está instalado; o app foi guiado por um teste de
   integração temporário (não versionado) e as capturas saem de `xcrun simctl io ... screenshot`.
+- **2026-10-22 (Windows)** — Alexandre envia a 1.0.4 com as 6 capturas como estão. Para a próxima versão: refazer a
+  **03** (o demo agora tem "Endereço da loja", sem "escritório") junto com o build que leva as permissões novas.
