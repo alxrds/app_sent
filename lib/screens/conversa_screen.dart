@@ -1328,6 +1328,19 @@ class _Balao extends StatelessWidget {
     if (mensagem.apagada) {
       return const Text('Mensagem apagada', style: TextStyle(fontStyle: FontStyle.italic));
     }
+    if (mensagem.direcao == 'entrada' && mensagem.status == 'erro' && mensagem.midiaUrl.isEmpty) {
+      const naoBaixou = {
+        'imagem': 'Esta foto não pôde ser baixada',
+        'sticker': 'Esta figurinha não pôde ser baixada',
+        'audio': 'Este áudio não pôde ser baixado',
+        'video': 'Este vídeo não pôde ser baixado',
+        'documento': 'Este documento não pôde ser baixado',
+      };
+      final aviso = naoBaixou[mensagem.tipo];
+      if (aviso != null) {
+        return _Anexo(icone: Icons.error_outline, texto: '$aviso do WhatsApp. Peça para o cliente enviar de novo.');
+      }
+    }
     final url = mensagem.midiaUrl.isEmpty ? '' : EcoApi.instancia.urlAbsoluta(mensagem.midiaUrl);
     final corLink = claroSobreEscuro ? Colors.white : context.cores.destaque;
     final legenda = mensagem.conteudo.isNotEmpty

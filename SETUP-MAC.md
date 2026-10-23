@@ -127,3 +127,6 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   integração temporário (não versionado) e as capturas saem de `xcrun simctl io ... screenshot`.
 - **2026-10-22 (Windows)** — Alexandre envia a 1.0.4 com as 6 capturas como estão. Para a próxima versão: refazer a
   **03** (o demo agora tem "Endereço da loja", sem "escritório") junto com o build que leva as permissões novas.
+- **2026-10-23 (Windows)** — Conversa mostra "Este vídeo/áudio/foto não pôde ser baixado do WhatsApp. Peça para o cliente
+  enviar de novo." quando o servidor marca a mídia recebida com erro (já no ar nos 5 painéis). Só código: entra no
+  próximo build, sem gerar build só por isso.

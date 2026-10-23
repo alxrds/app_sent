@@ -262,6 +262,7 @@ class DetalheConversa {
       if (m == null) continue;
       trocar(m.midiaUrl, _texto(a['midia_url']), (v) => m.midiaUrl = v);
       trocar(m.midiaMime, _texto(a['midia_mime']), (v) => m.midiaMime = v);
+      if (_texto(a['status']).isNotEmpty) trocar(m.status, _texto(a['status']), (v) => m.status = v);
     }
     for (final a in atualizacoes['reacoesRecentes'] ?? const <Map<String, dynamic>>[]) {
       final m = porId[_int(a['id'])];
