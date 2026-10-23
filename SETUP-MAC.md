@@ -117,3 +117,11 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
 - **2026-10-22 (Windows)** — Build 1.0.4 (5) no TestFlight, revisão beta do grupo externo "Clientes" pendente
   (o interno "Equipe UAU" já instala). Textos da loja em `design/app-store/textos.md`; permissões do
   `Info.plist` trocadas para "empresa" (próximo build). Mac: capturas (seção PRÓXIMO acima).
+- **2026-10-22 (Mac)** — Capturas tiradas em `design/app-store/iphone-6.3/01.png`…`06.png` (Simulador iPhone 17 Pro,
+  1206×2622, barra de status 9:41, demo do Sent pelo código `ZYZB9DQ6`, sem "DEBUG" e sem iPad). Ressalvas para o
+  Windows: **01** usa a aba Fila (só 2 conversas), porque a Todas mostra duas conversas de teste reais, "uau"
+  ("teste") e "alexandre" ("ou"), de 21/10 — foram encerradas pelo app, mas a Todas lista encerradas também; apagar
+  no demo e refazer a 01 com a Todas se quiser mais conversas. **02** (Mariana Souza) não tem foto nem documento:
+  nenhuma conversa do demo tem anexo. **03**: as respostas rápidas do demo falam em "escritório" e têm o marcador
+  "[endereço]" — vale corrigir no demo e refazer. Simulator.app não está instalado; o app foi guiado por um teste de
+  integração temporário (não versionado) e as capturas saem de `xcrun simctl io ... screenshot`.
