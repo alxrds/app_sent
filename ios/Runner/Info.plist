@@ -64,13 +64,13 @@
 		<key>ITSAppUsesNonExemptEncryption</key>
 		<false/>
 		<key>NSCameraUsageDescription</key>
-		<string>A câmera é usada para ler o QR Code que conecta este celular à sua conta do escritório.</string>
+		<string>A câmera é usada para ler o QR Code que conecta este celular à sua conta da empresa.</string>
 		<key>NSFaceIDUsageDescription</key>
-		<string>O Face ID protege o acesso às conversas e dados do escritório neste celular.</string>
+		<string>O Face ID protege o acesso às conversas da empresa neste celular.</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>O microfone é usado para gravar mensagens de áudio para os clientes do escritório.</string>
+		<string>O microfone é usado para gravar mensagens de áudio para os clientes.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>A galeria é usada para enviar fotos e documentos aos clientes do escritório.</string>
+		<string>A galeria é usada para enviar fotos e documentos aos clientes.</string>
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>remote-notification</string>

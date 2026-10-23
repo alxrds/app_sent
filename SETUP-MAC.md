@@ -42,6 +42,29 @@ só iPhone e `scripts/ipa.sh` (liga `IOS_PUSH_ENABLED=true`). Versão 1.0.3+4.
    celular → código) e pedir ao Windows uma notificação de teste pelo servidor. O demo do
    Sent não tem WhatsApp ligado.
 
+## ➡️ PRÓXIMO (Mac, 22/10): capturas de tela da App Store
+
+Textos da loja já prontos em `design/app-store/textos.md` (o Windows cola no App Store Connect).
+Falta só o que o Simulador faz:
+
+1. `git pull`. Rodar o app no Simulador **iPhone 17 Pro** (tela 6,3", 1206×2622 — foi o tamanho
+   aceito no app do escritório; 1320×2868 foi recusado no quadro "Dynamic Island").
+2. Conectar no **demo do Sent** (dados fictícios): Digitar código → Empresa `demo.sent.app.br`,
+   código `ZYZB9DQ6`. Nunca em empresa real.
+3. Tirar, nesta ordem, e salvar em `design/app-store/iphone-6.3/01.png` … `06.png`:
+   1. Lista de conversas (aba Fila ou Todas, com várias conversas).
+   2. Conversa aberta com troca de mensagens (texto e uma foto ou documento).
+   3. Respostas rápidas abertas sobre a conversa.
+   4. Transferir conversa (lista de atendentes e setores).
+   5. Chat Interno da equipe.
+   6. Tela de conexão (ler QR Code / digitar código) — desconectar antes, conectar de novo depois.
+4. Conferir que nenhuma captura mostra iPad, barra de depuração ("DEBUG") ou dado real.
+5. Commit + push e registrar abaixo.
+
+Também mudou (22/10, Windows): textos de permissão do `Info.plist` falam em "empresa" (antes
+"escritório"). Só valem no próximo build — **não gerar build novo agora**, o 1.0.4 (5) já está na
+revisão; entra junto na próxima versão.
+
 ## Para o Windows: publicar na App Store (22/10)
 
 Todo build enviado pelo Transporter cai no TestFlight. Não há como evitar isso, mas não é
@@ -91,3 +114,6 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   Preparar para envio"). **Mac: enviar o IPA 1.0.4 (5) pelo Transporter** e liberar no grupo interno do
   TestFlight; registrar aqui. A versão da loja foi criada como 1.0 — o Windows pede ao Alexandre para trocar
   para 1.0.4 (precisa bater com o build). Países: só Brasil (evita a exigência de comerciante da UE).
+- **2026-10-22 (Windows)** — Build 1.0.4 (5) no TestFlight, revisão beta do grupo externo "Clientes" pendente
+  (o interno "Equipe UAU" já instala). Textos da loja em `design/app-store/textos.md`; permissões do
+  `Info.plist` trocadas para "empresa" (próximo build). Mac: capturas (seção PRÓXIMO acima).
