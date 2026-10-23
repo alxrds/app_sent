@@ -130,3 +130,5 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
 - **2026-10-23 (Windows)** — Conversa mostra "Este vídeo/áudio/foto não pôde ser baixado do WhatsApp. Peça para o cliente
   enviar de novo." quando o servidor marca a mídia recebida com erro (já no ar nos 5 painéis). Só código: entra no
   próximo build, sem gerar build só por isso.
+- **2026-10-22 (Windows)** — 1.0.4 (5) enviado para revisão da App Store pelo Alexandre (~23:13). Login da revisão:
+  usuário `demo.sent.app.br`, senha `ZYZB9DQ6`.
