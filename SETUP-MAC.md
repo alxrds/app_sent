@@ -132,3 +132,4 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   próximo build, sem gerar build só por isso.
 - **2026-10-22 (Windows)** — 1.0.4 (5) enviado para revisão da App Store pelo Alexandre (~23:13). Login da revisão:
   usuário `demo.sent.app.br`, senha `ZYZB9DQ6`.
+- **2026-10-27 (Windows)** — **1.0.4 aprovado e publicado na App Store**: https://apps.apple.com/br/app/sent/id6825603485 (id 6825603485). Links atualizados no site do Sent, na UAU Store (`config/apps.php` → `ios`), na home da UAU e na Ajuda do Sent.
