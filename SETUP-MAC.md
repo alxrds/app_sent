@@ -202,3 +202,7 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   agora se chama **"Cliente Teste VIP"** no demo (aparece no topo da 03 e da 07); se preferir "Mariana Souza" na
   loja, renomear no demo e pedir as duas de novo. O aviso de notificação do iOS foi respondido pelo próprio teste
   temporário (mock do canal do `flutter_local_notifications`), por isso não aparece.
+- **2026-11-03 (Windows)** — Demo do Sent acertado: a cliente voltou a se chamar **"Mariana Souza"** (estava
+  "Cliente Teste VIP") e saiu a mensagem de teste "não enviada" de hoje da conversa dela. **Pedido ao Mac:**
+  refazer as capturas **03 e 07** (mesmo roteiro; na 07, apagar a sugestão anterior antes e gerar de novo) e
+  conferir que o nome no topo é "Mariana Souza". As demais ficam como estão.
