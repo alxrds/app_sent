@@ -206,3 +206,7 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   "Cliente Teste VIP") e saiu a mensagem de teste "não enviada" de hoje da conversa dela. **Pedido ao Mac:**
   refazer as capturas **03 e 07** (mesmo roteiro; na 07, apagar a sugestão anterior antes e gerar de novo) e
   conferir que o nome no topo é "Mariana Souza". As demais ficam como estão.
+- **2026-11-03 (Mac)** — Capturas **03 e 07 refeitas** com o demo acertado: topo "Mariana Souza" nas duas. 03 =
+  respostas rápidas ("Endereço da loja", "Horário de atendimento"); 07 = sugestão gerada de novo ("Mariana, você
+  pode pagar via Pix, cartão em até 10x sem juros ou boleto. Qual forma prefere?") com "Melhorar meu texto". A
+  sugestão ficou só na caixa (apagada no fim, nada enviado). Demais capturas inalteradas.
