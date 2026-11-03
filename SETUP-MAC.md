@@ -181,3 +181,12 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
 - **2026-11-03 (Windows)** — 1.0.5 (6): sugestão de resposta / melhorar meu texto na conversa (servidor
   do Sent 80d9971). Android 1.0.5 na UAU Store (assinatura conferida, 1.0.4 em
   /root/backups/sent-app-1.0.5-2026-11-03/). iOS: tarefa no topo deste arquivo.
+- **2026-11-03 (Mac)** — iOS **1.0.5 (6)** gerado pelo `scripts/ipa.sh`: IPA conferido (br.app.sent, Apple
+  Distribution SK456QD2XZ, `aps-environment=production`, `UIDeviceFamily` só `1`). Testado no Simulador (iPhone 17
+  Pro) no `demo.sent.app.br` com o código fixo `ZYZB9DQ6`, conversa "Cliente Teste VIP": **Sugerir resposta** e
+  **Melhorar meu texto** funcionam ("reservado ja manda o pix q entrego sabado de manha" → "Mariana, já deixei a
+  geladeira reservada. Você prefere pagar por Pix, cartão em até 10x sem juros ou boleto? A entrega fica para
+  sábado de manhã."). Faixa com código idêntico ao do ejur, conferida lá acima do teclado. Falta o Alexandre enviar
+  pelo Transporter e mandar a versão 1.0.5 para revisão. No ejur o "Melhorar meu texto" mudou um fato do rascunho
+  (detalhes no `SETUP-MAC.md` de lá) — vale conferir o prompt do copiloto do Sent também. **Caminhos no Mac
+  mudaram**: `~/dev/_apps/sent_app` (este) e `~/dev/_apps/ejur_app`.
