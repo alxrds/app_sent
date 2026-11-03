@@ -14,6 +14,21 @@ Lições do app do escritório (não repetir):
 
 ## ➡️ PRÓXIMO (03/11, do Windows): iOS 1.0.5 (6) — sugestão de resposta com IA
 
+> **São DOIS builds hoje, não um.** A mesma melhoria entrou nos dois apps, que são produtos
+> separados (código, Firebase, APNs e App Store Connect próprios), então cada um precisa da
+> sua versão nova na Apple:
+> - **Sent 1.0.5 (6)** — este arquivo, abaixo.
+> - **Ecossistema Jurídico 1.0.11 (13)** — `_ECOSSISTEMA/app_ecossistema/SETUP-MAC.md`
+>   (`git pull` lá também; tarefa no topo).
+>
+> Por que os dois: os clientes atendiam o WhatsApp pelo celular e pediam texto a uma IA de
+> fora (ChatGPT) para colar no cliente. O "Sugerir resposta" só existia no painel web. Agora,
+> nos dois apps, há um botão acima da caixa de escrever: com a caixa vazia a IA escreve a
+> próxima mensagem; com texto vira "Melhorar meu texto" e reescreve o rascunho. O servidor
+> de todos (Sent, Segati, DIOGO, ejur e UAU) já está pronto; os Androids já estão na UAU
+> Store. Só falta o iPhone. O atendimento da UAU passou a usar o app do Sent (empresa
+> `uau.dev.br`), por isso o Sent também vale para a UAU.
+
 O que mudou desde o 1.0.4: na conversa, acima da caixa de escrever, um botão "Sugerir resposta"
 (caixa vazia: a IA escreve a próxima mensagem) que vira "Melhorar meu texto" quando há texto
 (a IA reescreve o rascunho no tom da empresa). Nada é enviado sozinho. Também entram os textos de
