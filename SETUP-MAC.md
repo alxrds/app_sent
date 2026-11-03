@@ -195,3 +195,10 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   3f876dd, Segati c7729ba, DIOGO dcac7ce, ejur f543aec e UAU 279c5f9; testado no demo com "o processo ta parado
   esperando o juiz…" → "Mariana, o processo está parado, aguardando o juiz. Assim que sair a decisão, te aviso.".
   **Não precisa de build novo**: os IPAs 1.0.5 (6) e 1.0.11 (13) já gerados valem. Caminhos novos no Mac anotados.
+- **2026-11-03 (Mac)** — Capturas para a 1.0.5 em `design/app-store/iphone-6.3/` (1206×2622, 9:41, demo pelo
+  `ZYZB9DQ6`): **03 refeita** (respostas rápidas agora mostram "Endereço da loja — Av. Brasil, 1500, Centro" e
+  "Horário de atendimento") e **07 nova, opcional**: conversa com "Melhorar meu texto" e a sugestão da IA na
+  caixa, para mostrar a novidade na loja. As outras (01, 02, 04–06) seguem iguais. Atenção: a conversa da Mariana
+  agora se chama **"Cliente Teste VIP"** no demo (aparece no topo da 03 e da 07); se preferir "Mariana Souza" na
+  loja, renomear no demo e pedir as duas de novo. O aviso de notificação do iOS foi respondido pelo próprio teste
+  temporário (mock do canal do `flutter_local_notifications`), por isso não aparece.
