@@ -12,7 +12,37 @@ Lições do app do escritório (não repetir):
 - Push e permissões só valem se o `scripts/ipa.sh` gravar o `Runner.entitlements` no
   archive — sempre gerar pelo script, nunca pelo Xcode direto.
 
-## PRÓXIMO (22/10, do Windows): primeiro build do iOS com push
+## ➡️ PRÓXIMO (03/11, do Windows): iOS 1.0.5 (6) — sugestão de resposta com IA
+
+O que mudou desde o 1.0.4: na conversa, acima da caixa de escrever, um botão "Sugerir resposta"
+(caixa vazia: a IA escreve a próxima mensagem) que vira "Melhorar meu texto" quando há texto
+(a IA reescreve o rascunho no tom da empresa). Nada é enviado sozinho. Também entram os textos de
+permissão do `Info.plist` com "empresa" (22/10). Android 1.0.5 já está na UAU Store.
+
+```bash
+cd "$HOME/dev/ECOSSISTEMAS/_SENT/app_sent" && git pull
+flutter pub get && flutter analyze && flutter test   # tudo limpo
+grep -n "^version" pubspec.yaml                       # 1.0.5+6
+```
+
+1. Simulador (iPhone 17 Pro), conectado no **demo do Sent** (nunca empresa real): Meu perfil não
+   precisa — no app, Digitar código → Empresa `demo.sent.app.br` + código pedido ao Windows (o
+   código vale 2 min; o Windows gera pelo servidor). Abrir "Cliente Teste VIP", tocar em
+   **Sugerir resposta** (leva uns segundos; o demo tem IA desde 03/11), apagar, escrever
+   "reservado ja manda o pix q entrego sabado de manha" e tocar em **Melhorar meu texto**.
+   Conferir que a faixa não fica por baixo do teclado nem da barra de baixo do iPhone.
+2. `./scripts/ipa.sh` (nunca pelo Xcode direto) → conferir no IPA `aps-environment=production`,
+   `UIDeviceFamily` só `1` → Transporter.
+3. App Store Connect → Sent → **+ Versão** 1.0.5 → selecionar o build 1.0.5 (6) → "Novidades
+   desta versão":
+   > Sugestão de resposta com IA: na conversa, toque em "Sugerir resposta" e a mensagem vem
+   > pronta para revisar e enviar. Prefere escrever do seu jeito? Escreva e toque em "Melhorar
+   > meu texto".
+   → Enviar para revisão. A informação de revisão (código do demo) é a mesma do 1.0.4; se o
+   código antigo tiver vencido, pedir um novo ao Windows antes de enviar.
+4. Registrar abaixo (commit + push).
+
+## (feito) Primeiro build do iOS com push (22/10)
 
 ```bash
 ECO="$HOME/dev/ECOSSISTEMAS"
@@ -42,7 +72,7 @@ só iPhone e `scripts/ipa.sh` (liga `IOS_PUSH_ENABLED=true`). Versão 1.0.3+4.
    celular → código) e pedir ao Windows uma notificação de teste pelo servidor. O demo do
    Sent não tem WhatsApp ligado.
 
-## ➡️ PRÓXIMO (Mac, 22/10): capturas de tela da App Store
+## (feito) Capturas de tela da App Store (22/10)
 
 Textos da loja já prontos em `design/app-store/textos.md` (o Windows cola no App Store Connect).
 Falta só o que o Simulador faz:
@@ -133,3 +163,6 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
 - **2026-10-22 (Windows)** — 1.0.4 (5) enviado para revisão da App Store pelo Alexandre (~23:13). Login da revisão:
   usuário `demo.sent.app.br`, senha `ZYZB9DQ6`.
 - **2026-10-27 (Windows)** — **1.0.4 aprovado e publicado na App Store**: https://apps.apple.com/br/app/sent/id6825603485 (id 6825603485). Links atualizados no site do Sent, na UAU Store (`config/apps.php` → `ios`), na home da UAU e na Ajuda do Sent.
+- **2026-11-03 (Windows)** — 1.0.5 (6): sugestão de resposta / melhorar meu texto na conversa (servidor
+  do Sent 80d9971). Android 1.0.5 na UAU Store (assinatura conferida, 1.0.4 em
+  /root/backups/sent-app-1.0.5-2026-11-03/). iOS: tarefa no topo deste arquivo.

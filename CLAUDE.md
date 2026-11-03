@@ -69,6 +69,9 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.5 (03/11/2026)**: "Sugerir resposta" / "Melhorar meu texto" acima da caixa da conversa
+  (`/sac/api/copiloto/sugestao`, campo `rascunho`; timeout 60 s). Assinatura conferida; 1.0.4 guardado em
+  /root/backups/sent-app-1.0.5-2026-11-03/.
 - **1.0.4 (22/10/2026)**: APK sem as bibliotecas de emulador (`packaging.jniLibs.excludes` x86/x86_64 no
   `build.gradle.kts` — o `abiFilters` não funciona, o plugin do Flutter ignora), 55,5 → 49,3 MB. O resto do
   tamanho é o motor do Flutter + código em 2 arquiteturas (~36 MB) e o leitor de QR do ML Kit embutido (~8 MB).

@@ -26,6 +26,7 @@ class EcoApi {
   static const _chaveToken = 'token';
   static const _chaveBase = 'base_url';
   static const _timeout = Duration(seconds: 20);
+  static const _tempoDaIa = Duration(seconds: 60);
 
   String? _token;
   String? _base;
@@ -141,6 +142,11 @@ class EcoApi {
 
   Future<void> comentar(int conversaId, String texto) => _post('/sac/api/comentar/$conversaId', {'texto': texto});
 
+  Future<String> sugerirResposta(int conversaId, {String rascunho = ''}) async {
+    final dados = await _post('/sac/api/copiloto/sugestao/$conversaId', {if (rascunho.isNotEmpty) 'rascunho': rascunho}, _tempoDaIa);
+    return (dados['texto'] as String? ?? '').trim();
+  }
+
   Future<List<RespostaRapida>> respostasRapidas() async {
     final dados = await _get('/sac/api/rapidas');
     return (dados['rapidas'] as List? ?? []).map((r) => RespostaRapida.deJson((r as Map).cast<String, dynamic>())).toList();
@@ -203,9 +209,10 @@ class EcoApi {
     return _decodificar(resposta);
   }
 
-  Future<Map<String, dynamic>> _post(String caminho, [Map<String, String>? campos]) async {
+  Future<Map<String, dynamic>> _post(String caminho, [Map<String, String>? campos, Duration limite = _timeout]) async {
     final resposta = await _executar(
       () => http.post(Uri.parse('$_base$caminho'), headers: {...cabecalhosAutenticados, 'Accept': 'application/json'}, body: campos ?? const {}),
+      limite: limite,
     );
     return _decodificar(resposta);
   }

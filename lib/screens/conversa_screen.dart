@@ -51,6 +51,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
   bool _erroRascunhoAvisado = false;
   bool _carregou = false;
   bool _enviando = false;
+  bool _sugerindo = false;
   bool _modoNota = false;
   bool _buscando = false;
   DateTime? _gravandoDesde;
@@ -337,6 +338,61 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
         mostrarAviso(context, 'Não foi possível abrir o arquivo.');
       }
     }
+  }
+
+  Future<void> _sugerirResposta() async {
+    FocusScope.of(context).unfocus();
+    final rascunho = _texto.text.trim();
+    setState(() => _sugerindo = true);
+    try {
+      final sugestao = await EcoApi.instancia.sugerirResposta(widget.conversaId, rascunho: rascunho);
+      if (!mounted || sugestao.isEmpty) {
+        return;
+      }
+      _texto.text = sugestao;
+      _texto.selection = TextSelection.collapsed(offset: sugestao.length);
+    } on ApiException catch (e) {
+      if (mounted) {
+        mostrarAviso(context, e.mensagem);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _sugerindo = false);
+      }
+    }
+  }
+
+  Widget _barraDaIa() {
+    final c = context.cores;
+    final temTexto = _texto.text.trim().isNotEmpty;
+    final rotulo = _sugerindo ? 'Escrevendo…' : (temTexto ? 'Melhorar meu texto' : 'Sugerir resposta');
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Material(
+          color: c.destaque.withValues(alpha: .14),
+          shape: const StadiumBorder(),
+          child: InkWell(
+            customBorder: const StadiumBorder(),
+            onTap: _sugerindo || _enviando ? null : _sugerirResposta,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _sugerindo
+                      ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: c.destaque))
+                      : Icon(Icons.auto_awesome, size: 17, color: c.destaque),
+                  const SizedBox(width: 8),
+                  Text(rotulo, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: c.destaque)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _respostasRapidas() async {
@@ -858,6 +914,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
           mainAxisSize: MainAxisSize.min,
           children: [
             if (_respondendo != null && !_modoNota && !_gravando) _barraResposta(_respondendo!),
+            if (!widget.interna && !_modoNota && !_gravando) _barraDaIa(),
             if (_modoNota && !_gravando)
               Padding(
                 padding: const EdgeInsets.only(bottom: 6, left: 6),
@@ -927,7 +984,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
                               Expanded(
                                 child: TextField(
                                   controller: _texto,
-                                  readOnly: _enviando || !_rascunhoPronto,
+                                  readOnly: _enviando || _sugerindo || !_rascunhoPronto,
                                   minLines: 1,
                                   maxLines: 5,
                                   textCapitalization: TextCapitalization.sentences,
