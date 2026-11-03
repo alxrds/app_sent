@@ -190,3 +190,8 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   pelo Transporter e mandar a versão 1.0.5 para revisão. No ejur o "Melhorar meu texto" mudou um fato do rascunho
   (detalhes no `SETUP-MAC.md` de lá) — vale conferir o prompt do copiloto do Sent também. **Caminhos no Mac
   mudaram**: `~/dev/_apps/sent_app` (este) e `~/dev/_apps/ejur_app`.
+- **2026-11-03 (Windows)** — Corrigido no servidor o "Melhorar meu texto" que trocava fato do rascunho pela
+  conversa (achado do Mac no ejur): agora o rascunho é a verdade e a conversa só dá o tom e o nome. No ar em Sent
+  3f876dd, Segati c7729ba, DIOGO dcac7ce, ejur f543aec e UAU 279c5f9; testado no demo com "o processo ta parado
+  esperando o juiz…" → "Mariana, o processo está parado, aguardando o juiz. Assim que sair a decisão, te aviso.".
+  **Não precisa de build novo**: os IPAs 1.0.5 (6) e 1.0.11 (13) já gerados valem. Caminhos novos no Mac anotados.
