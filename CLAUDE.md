@@ -69,6 +69,8 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.6 (04/11/2026, só Android)**: ícone e cor da notificação eram cópia do Ecossistema; agora balão do Sent e azul #3D8FD1. iPhone usa o ícone do app e não precisou de build. Assinatura conferida; 1.0.5 guardado em
+  /root/backups/sent-app-1.0.6-2026-11-04/.
 - **1.0.5 (03/11/2026)**: "Sugerir resposta" / "Melhorar meu texto" acima da caixa da conversa
   (`/sac/api/copiloto/sugestao`, campo `rascunho`; timeout 60 s). Assinatura conferida; 1.0.4 guardado em
   /root/backups/sent-app-1.0.5-2026-11-03/.
