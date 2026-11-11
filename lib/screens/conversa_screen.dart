@@ -1055,6 +1055,29 @@ class _PontoPulsanteState extends State<_PontoPulsante> with SingleTickerProvide
 
 String _duracao(Duration d) => '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
 
+bool _pareceNomeDeArquivo(String texto) => RegExp(r'^[^\n]{1,150}\.[A-Za-z0-9]{2,5}$').hasMatch(texto.trim());
+
+String _nomeDoDocumento(Mensagem mensagem) {
+  final caminho = Uri.tryParse(mensagem.midiaUrl)?.path ?? '';
+  final ponto = caminho.lastIndexOf('.');
+  final extensao = ponto >= 0 && ponto > caminho.lastIndexOf('/') ? caminho.substring(ponto + 1).toLowerCase() : '';
+  const rotulos = {
+    'pdf': 'PDF',
+    'xls': 'Planilha',
+    'xlsx': 'Planilha',
+    'csv': 'Planilha',
+    'ods': 'Planilha',
+    'doc': 'Documento do Word',
+    'docx': 'Documento do Word',
+    'ppt': 'Apresentação',
+    'pptx': 'Apresentação',
+    'zip': 'Arquivo compactado',
+    'rar': 'Arquivo compactado',
+  };
+  final rotulo = rotulos[extensao] ?? 'Documento';
+  return extensao.isEmpty || rotulo == 'PDF' ? rotulo : '$rotulo (${extensao.toUpperCase()})';
+}
+
 class _Rotulo extends StatelessWidget {
   const _Rotulo(this.texto);
 
@@ -1446,7 +1469,15 @@ class _Balao extends StatelessWidget {
           ],
         );
       case 'documento':
-        return _Anexo(icone: Icons.description_outlined, texto: mensagem.conteudo.isNotEmpty ? mensagem.conteudo : 'Documento', url: url);
+        final conteudoEhNome = _pareceNomeDeArquivo(mensagem.conteudo);
+        final legendaDoDocumento = conteudoEhNome ? null : legenda;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _Anexo(icone: Icons.description_outlined, texto: conteudoEhNome ? mensagem.conteudo : _nomeDoDocumento(mensagem), url: url),
+            ?legendaDoDocumento,
+          ],
+        );
       case 'localizacao':
         return _CartaoLocalizacao(localizacao: lerLocalizacao(mensagem.conteudo), claro: claroSobreEscuro);
       case 'contato':

@@ -69,6 +69,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.7 (11/11/2026, Android)**: documento com legenda mostrava só a legenda (o WhatsApp manda a legenda no lugar do nome do arquivo); agora cartão "Planilha (XLSX)", "PDF" etc. para abrir e a legenda embaixo. Mesma correção no app do escritório (sem build ainda). 1.0.6 em /root/backups/sent-app-1.0.7-2026-11-11/.
 - **1.0.6 (04/11/2026, só Android)**: ícone e cor da notificação eram cópia do Ecossistema; agora balão do Sent e azul #3D8FD1. iPhone usa o ícone do app e não precisou de build. Assinatura conferida; 1.0.5 guardado em
   /root/backups/sent-app-1.0.6-2026-11-04/.
 - **1.0.5 (03/11/2026)**: "Sugerir resposta" / "Melhorar meu texto" acima da caixa da conversa
