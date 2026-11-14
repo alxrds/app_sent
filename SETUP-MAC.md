@@ -234,3 +234,8 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
 - **2026-11-14 (Mac)** — Contrato da Apple aceito. IPA **1.0.8 (9)** gerado com a correção (2f7709d): br.app.sent,
   Apple Distribution SK456QD2XZ, `aps-environment=production`, `UIDeviceFamily` só `1`. Falta o Alexandre enviar pelo
   Transporter e mandar a versão 1.0.8 para revisão.
+- **2026-11-14 (Mac)** — IPA **1.0.8 (10)** gerado (921aa89, mensagem apagada continua visível; inclui a correção
+  2f7709d): br.app.sent, Apple Distribution SK456QD2XZ, `aps-environment=production`, `UIDeviceFamily` só `1`.
+  `flutter analyze`/`flutter test` limpos. **Não deu para ver a marca "apagada"**: nenhuma das 16 conversas do
+  demo.sent.app.br tem mensagem apagada (nenhum erro na varredura). **Para o Windows**: marcar uma mensagem de teste
+  como apagada no demo (fora da Mariana, que aparece nas capturas) para o Mac conferir.
