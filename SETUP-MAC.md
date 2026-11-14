@@ -243,3 +243,7 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   tela). Falta, no App Store Connect, selecionar o build **10** na versão 1.0.8 (se o 9 já estava em revisão,
   "Remover da revisão" e trocar) e enviar para revisão. Conferência visual da mensagem apagada continua pendente.
 - **2026-11-14 (Mac)** — Alexandre removeu o 1.0.8 (9) da revisão no App Store Connect, para trocar pelo build 10.
+- **2026-11-14 (Mac)** — **Mensagem apagada conferida no Simulador** (mesmo código do build 10 já enviado): o teste
+  temporário marcou `apagada = true` numa mensagem já carregada (só no app) — "Pode reservar! Como faço o
+  pagamento?" da Mariana — e o balão passou a mostrar o conteúdo + ícone 🚫 "apagada · 12:13" no rodapé, sem o
+  texto antigo "Mensagem apagada". Nenhum erro.
