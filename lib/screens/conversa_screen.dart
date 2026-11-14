@@ -1376,7 +1376,7 @@ class _Balao extends StatelessWidget {
                     ),
                   ),
                 _conteudo(context, escuroNoBalao),
-                if (mensagem.reacao.isNotEmpty && !mensagem.apagada)
+                if (mensagem.reacao.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Container(
@@ -1392,6 +1392,11 @@ class _Balao extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (mensagem.apagada) ...[
+                      Icon(Icons.block, size: 12, color: corRodape),
+                      const SizedBox(width: 3),
+                      Text('apagada · ', style: TextStyle(fontSize: 11, color: corRodape, fontStyle: FontStyle.italic)),
+                    ],
                     Flexible(
                       child: Text(rodape, style: TextStyle(fontSize: 11, color: corRodape)),
                     ),
@@ -1419,9 +1424,6 @@ class _Balao extends StatelessWidget {
   }
 
   Widget _conteudo(BuildContext context, bool claroSobreEscuro) {
-    if (mensagem.apagada) {
-      return const Text('Mensagem apagada', style: TextStyle(fontStyle: FontStyle.italic));
-    }
     if (mensagem.direcao == 'entrada' && mensagem.status == 'erro' && mensagem.midiaUrl.isEmpty) {
       const naoBaixou = {
         'imagem': 'Esta foto não pôde ser baixada',

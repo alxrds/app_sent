@@ -12,6 +12,23 @@ Lições do app do escritório (não repetir):
 - Push e permissões só valem se o `scripts/ipa.sh` gravar o `Runner.entitlements` no
   archive — sempre gerar pelo script, nunca pelo Xcode direto.
 
+## ➡️ AGORA (14/11 tarde, do Windows): novo IPA 1.0.8 (10) — substitui o (9)
+
+> **Mensagem apagada pelo cliente continua aparecendo (14/11, pedido do Alexandre).** O app trocava o
+> conteúdo por "Mensagem apagada"; a regra é a do painel web: o que recebemos fica visível, só ganha a marca
+> 🚫 "apagada" no rodapé do balão. O Android já está na UAU Store com isso.
+>
+> ```bash
+> cd "$HOME/dev/_apps/sent_app" && git pull && flutter pub get && flutter analyze && flutter test
+> grep -n "^version" pubspec.yaml   # 1.0.8+10
+> ./scripts/ipa.sh
+> ```
+> Simulador no demo do Sent: se houver mensagem com `apagada_em` no demo, conferir que mostra o conteúdo + "apagada"
+> no rodapé (se não houver, pedir ao Windows para marcar uma de teste no demo). Conferir no IPA versão **1.0.8**,
+> build **10**, `aps-environment=production`, `UIDeviceFamily` só `1`. O Alexandre envia pelo Transporter e, na
+> versão 1.0.8 do App Store Connect, troca a compilação para **1.0.8 (10)** (se a (9) já foi para revisão, "Remover
+> da revisão" e trocar). Mesmo texto de novidades. Capturas não mudam.
+
 ## ➡️ PRÓXIMO (14/11, do Windows): iOS 1.0.8 (9) — conversa abre no fim + botão para descer
 
 > **São DOIS builds, não um.** A mesma melhoria entrou nos dois apps:
