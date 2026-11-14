@@ -44,6 +44,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
   bool _consultando = false;
   bool _ativo = true;
   bool _novasMensagens = false;
+  bool _longeDoFim = false;
   String? _audioPendente;
   late final String _chaveRascunho;
   bool _rascunhoPronto = false;
@@ -75,8 +76,12 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
       _salvarAtrasado = Timer(const Duration(milliseconds: 300), _salvarRascunho);
     });
     _rolagem.addListener(() {
-      if (_novasMensagens && _rolagem.position.extentAfter < 80) {
-        setState(() => _novasMensagens = false);
+      final longe = _rolagem.position.pixels > 400;
+      if (longe != _longeDoFim || (_novasMensagens && !longe)) {
+        setState(() {
+          _longeDoFim = longe;
+          if (!longe) _novasMensagens = false;
+        });
       }
     });
     _buscar();
@@ -149,7 +154,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
       if (!mounted) {
         return;
       }
-      final acompanhar = !_carregou || !_rolagem.hasClients || _rolagem.position.extentAfter < 100;
+      final acompanhar = !_carregou || !_rolagem.hasClients || _rolagem.position.pixels < 100;
       final novas = detalhe.mensagens.where((m) => m.id > _ultimoId).toList();
       setState(() {
         _conversa = detalhe.conversa;
@@ -178,7 +183,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     if (mounted) setState(() => _novasMensagens = false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_rolagem.hasClients) {
-        _rolagem.animateTo(_rolagem.position.maxScrollExtent, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+        _rolagem.animateTo(0, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
       }
     });
   }
@@ -200,7 +205,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
       }
     } on FileSystemException {
       if (mounted) {
-        mostrarAviso(context, 'N?o foi poss?vel ler o ?udio. Voc? pode tentar novamente ou descart?-lo.');
+        mostrarAviso(context, 'Não foi possível ler o áudio. Você pode tentar novamente ou descartá-lo.');
       }
     } finally {
       if (mounted) {
@@ -488,7 +493,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
         rascunho['audio'] = null;
         await Rascunhos.salvar(_chaveRascunho, rascunho);
       }
-      return r.entregue ? null : '?udio salvo no servidor; WhatsApp ainda n?o confirmou o envio.';
+      return r.entregue ? null : 'Áudio salvo no servidor; WhatsApp ainda não confirmou o envio.';
     });
   }
 
@@ -498,7 +503,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (c) => AlertDialog(
-        title: const Text('Descartar ?udio n?o enviado?'),
+        title: const Text('Descartar áudio não enviado?'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Manter')),
           TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Descartar')),
@@ -675,7 +680,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     if (_buscando) _alternarBusca();
     var contexto = _chavesBaloes[alvo.id]?.currentContext;
     if (contexto == null && _rolagem.hasClients) {
-      _rolagem.jumpTo(_rolagem.position.maxScrollExtent * i / _mensagens.length);
+      _rolagem.jumpTo(_rolagem.position.maxScrollExtent * (_mensagens.length - 1 - i) / _mensagens.length);
       await WidgetsBinding.instance.endOfFrame;
       contexto = _chavesBaloes[alvo.id]?.currentContext;
     }
@@ -705,17 +710,23 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
         children: [
           if (_erro != null && _carregou)
             MaterialBanner(
-              content: const Text('Reconectando? As mensagens podem estar desatualizadas.'),
+              content: const Text('Reconectando… As mensagens podem estar desatualizadas.'),
               actions: [TextButton(onPressed: _buscar, child: const Text('Tentar agora'))],
             ),
-          Expanded(child: _corpo()),
-          if (_novasMensagens) TextButton.icon(onPressed: _descer, icon: const Icon(Icons.arrow_downward), label: const Text('Novas mensagens')),
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(child: _corpo()),
+                if (_longeDoFim || _novasMensagens) Positioned(right: 12, bottom: 12, child: _BotaoDescer(novas: _novasMensagens, aoTocar: _descer)),
+              ],
+            ),
+          ),
           if (_audioPendente != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
-                  const Text('?udio pendente. Se houve timeout, confira a conversa antes de reenviar.'),
+                  const Text('Áudio pendente. Se houve timeout, confira a conversa antes de reenviar.'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -809,9 +820,11 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     }
     return ListView.builder(
       controller: _rolagem,
+      reverse: true,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       itemCount: visiveis.length,
-      itemBuilder: (_, i) {
+      itemBuilder: (_, posicao) {
+        final i = visiveis.length - 1 - posicao;
         final m = visiveis[i];
         final anterior = i > 0 ? visiveis[i - 1] : null;
         final novoDia = m.criadoEm != null && (anterior?.criadoEm == null || !_mesmoDia(anterior!.criadoEm!, m.criadoEm!));
@@ -1832,6 +1845,43 @@ class _CartaoContato extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+class _BotaoDescer extends StatelessWidget {
+  const _BotaoDescer({required this.novas, required this.aoTocar});
+
+  final bool novas;
+  final VoidCallback aoTocar;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.cores;
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Material(
+          color: c.cartao,
+          shape: const CircleBorder(),
+          elevation: 3,
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: aoTocar,
+            child: const SizedBox(width: 44, height: 44, child: Icon(Icons.keyboard_double_arrow_down_rounded)),
+          ),
+        ),
+        if (novas)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              width: 14,
+              height: 14,
+              decoration: BoxDecoration(color: c.destaque, shape: BoxShape.circle, border: Border.all(color: c.cartao, width: 2)),
+            ),
+          ),
+      ],
     );
   }
 }
