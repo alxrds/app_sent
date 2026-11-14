@@ -12,49 +12,44 @@ Lições do app do escritório (não repetir):
 - Push e permissões só valem se o `scripts/ipa.sh` gravar o `Runner.entitlements` no
   archive — sempre gerar pelo script, nunca pelo Xcode direto.
 
-## ➡️ PRÓXIMO (03/11, do Windows): iOS 1.0.5 (6) — sugestão de resposta com IA
+## ➡️ PRÓXIMO (14/11, do Windows): iOS 1.0.8 (9) — conversa abre no fim + botão para descer
 
-> **São DOIS builds hoje, não um.** A mesma melhoria entrou nos dois apps, que são produtos
-> separados (código, Firebase, APNs e App Store Connect próprios), então cada um precisa da
-> sua versão nova na Apple:
-> - **Sent 1.0.5 (6)** — este arquivo, abaixo.
-> - **Ecossistema Jurídico 1.0.11 (13)** — `_ECOSSISTEMA/app_ecossistema/SETUP-MAC.md`
->   (`git pull` lá também; tarefa no topo).
->
-> Por que os dois: os clientes atendiam o WhatsApp pelo celular e pediam texto a uma IA de
-> fora (ChatGPT) para colar no cliente. O "Sugerir resposta" só existia no painel web. Agora,
-> nos dois apps, há um botão acima da caixa de escrever: com a caixa vazia a IA escreve a
-> próxima mensagem; com texto vira "Melhorar meu texto" e reescreve o rascunho. O servidor
-> de todos (Sent, Segati, DIOGO, ejur e UAU) já está pronto; os Androids já estão na UAU
-> Store. Só falta o iPhone. O atendimento da UAU passou a usar o app do Sent (empresa
-> `uau.dev.br`), por isso o Sent também vale para a UAU.
+> **São DOIS builds, não um.** A mesma melhoria entrou nos dois apps:
+> - **Sent 1.0.8 (9)** — este arquivo, abaixo.
+> - **Ecossistema Jurídico 10.0.12 (14)** — `SETUP-MAC.md` do `ejur_app` (`git pull` lá também;
+>   tarefa no topo; lá o nome da versão na Apple é 10.0.12, aqui não: o Sent segue normal).
 
-O que mudou desde o 1.0.4: na conversa, acima da caixa de escrever, um botão "Sugerir resposta"
-(caixa vazia: a IA escreve a próxima mensagem) que vira "Melhorar meu texto" quando há texto
-(a IA reescreve o rascunho no tom da empresa). Nada é enviado sozinho. Também entram os textos de
-permissão do `Info.plist` com "empresa" (22/10). Android 1.0.5 já está na UAU Store.
+Último iOS do Sent na loja: 1.0.5. A 1.0.6 e a 1.0.7 saíram só no Android. O que muda no iPhone
+desde a 1.0.5:
+- **Conversa abre na última mensagem.** Em conversa longa (vários dias) ela abria no meio e era
+  preciso rolar até o fim para escrever. A lista agora começa de baixo, como no WhatsApp.
+- **Botão com setinha para descer:** redondo, no canto de baixo à direita, aparece quando a
+  pessoa sobe a conversa; um toque desce até a última mensagem. Com bolinha colorida quando
+  chega mensagem nova enquanto ela está lá em cima (substituiu o antigo texto "Novas mensagens").
+- **Documento com legenda** (1.0.7 do Android): mostra o cartão "Planilha (XLSX)" / "PDF" para
+  abrir e a legenda embaixo.
+- Acentos corrigidos nos avisos de áudio. (O ícone de notificação da 1.0.6 é só do Android.)
 
 ```bash
-cd "$HOME/dev/ECOSSISTEMAS/_SENT/app_sent" && git pull
+cd "$HOME/dev/_apps/sent_app" && git pull
 flutter pub get && flutter analyze && flutter test   # tudo limpo
-grep -n "^version" pubspec.yaml                       # 1.0.5+6
+grep -n "^version" pubspec.yaml                       # 1.0.8+9
 ```
 
-1. Simulador (iPhone 17 Pro), conectado no **demo do Sent** (nunca empresa real): Meu perfil não
-   precisa — no app, Digitar código → Empresa `demo.sent.app.br` + código pedido ao Windows (o
-   código vale 2 min; o Windows gera pelo servidor). Abrir "Cliente Teste VIP", tocar em
-   **Sugerir resposta** (leva uns segundos; o demo tem IA desde 03/11), apagar, escrever
-   "reservado ja manda o pix q entrego sabado de manha" e tocar em **Melhorar meu texto**.
-   Conferir que a faixa não fica por baixo do teclado nem da barra de baixo do iPhone.
-2. `./scripts/ipa.sh` (nunca pelo Xcode direto) → conferir no IPA `aps-environment=production`,
-   `UIDeviceFamily` só `1` → Transporter.
-3. App Store Connect → Sent → **+ Versão** 1.0.5 → selecionar o build 1.0.5 (6) → "Novidades
-   desta versão":
-   > Sugestão de resposta com IA: na conversa, toque em "Sugerir resposta" e a mensagem vem
-   > pronta para revisar e enviar. Prefere escrever do seu jeito? Escreva e toque em "Melhorar
-   > meu texto".
-   → Enviar para revisão. A informação de revisão (código do demo) é a mesma do 1.0.4; se o
-   código antigo tiver vencido, pedir um novo ao Windows antes de enviar.
+1. Simulador (iPhone 17 Pro) no **demo do Sent** (nunca empresa real; Empresa `demo.sent.app.br`,
+   código fixo `ZYZB9DQ6`, se não valer mais pedir um ao Windows): abrir a conversa com mais
+   mensagens (Mariana Souza) e conferir que **abre na última**; subir bastante → aparece o botão
+   redondo com a seta → tocar → desce até o fim e o botão some. Conferir que o botão não fica por
+   baixo da caixa de escrever, do teclado nem da barra de baixo do iPhone. Conferir também a busca
+   na conversa (lupa) e tocar numa mensagem citada (vai até a original): a lista foi invertida.
+   Nada enviado.
+2. `./scripts/ipa.sh` (nunca pelo Xcode direto) → conferir no IPA versão **1.0.8 (9)**,
+   `aps-environment=production`, `UIDeviceFamily` só `1` → Transporter.
+3. App Store Connect → Sent → **+ Versão** 1.0.8 → build 1.0.8 (9) → "Novidades desta versão":
+   > Conversas longas agora abrem direto na última mensagem. Subiu para ler o histórico? Toque
+   > na setinha para voltar ao fim. Documentos enviados com legenda aparecem com o arquivo para
+   > abrir e a legenda embaixo.
+   → Enviar para revisão (informação de revisão = a mesma da 1.0.5).
 4. Registrar abaixo (commit + push).
 
 ## (feito) Primeiro build do iOS com push (22/10)
