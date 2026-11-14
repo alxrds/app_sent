@@ -205,3 +205,12 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   respostas rápidas ("Endereço da loja", "Horário de atendimento"); 07 = sugestão gerada de novo ("Mariana, você
   pode pagar via Pix, cartão em até 10x sem juros ou boleto. Qual forma prefere?") com "Melhorar meu texto". A
   sugestão ficou só na caixa (apagada no fim, nada enviado). Demais capturas inalteradas.
+- **2026-11-14 (Mac)** — 1.0.8 (9) testado no Simulador (iPhone 17 Pro, `demo.sent.app.br`, conversa "Mariana
+  Souza"). Para ter conversa longa e citação, o Mac **enviou no demo 15 mensagens de teste + 1 resposta citando**
+  ("Mensagem de teste N do iPhone…", com autorização do Alexandre). ⚠️ A Mariana é a conversa das capturas 02, 03 e
+  07 da App Store: **limpar essas mensagens no demo** antes de tirar capturas novas. Resultado: abre na última
+  mensagem; botão aparece ao subir e desce até o fim; acima da faixa da IA e da caixa; citação rola até a original;
+  busca filtra. **Mesmo bug corrigido do ejur** (mensagem duplicada a cada consulta quando a ordem por data não bate
+  com a ordem dos ids → GlobalKey duplicada): `_ultimoId` = maior id e novas = ids ainda não conhecidos. Teste
+  passou sem nenhum erro. **Para o Windows**: o Android 1.0.8 da UAU Store saiu sem essa correção. **IPA ainda não
+  gerado**: a Apple pede aceite do contrato novo do Developer Program (detalhes no `SETUP-MAC.md` do ejur).

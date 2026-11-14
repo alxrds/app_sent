@@ -61,7 +61,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
   int? _destacada;
   final _chavesBaloes = <int, GlobalKey>{};
 
-  int get _ultimoId => _mensagens.isEmpty ? 0 : _mensagens.last.id;
+  int get _ultimoId => _mensagens.fold(0, (maior, m) => m.id > maior ? m.id : maior);
   bool get _gravando => _gravandoDesde != null;
 
   @override
@@ -155,7 +155,8 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
         return;
       }
       final acompanhar = !_carregou || !_rolagem.hasClients || _rolagem.position.pixels < 100;
-      final novas = detalhe.mensagens.where((m) => m.id > _ultimoId).toList();
+      final conhecidas = {for (final m in _mensagens) m.id};
+      final novas = detalhe.mensagens.where((m) => !conhecidas.contains(m.id)).toList();
       setState(() {
         _conversa = detalhe.conversa;
         detalhe.aplicarEm(_mensagens);
