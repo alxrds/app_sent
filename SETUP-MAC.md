@@ -16,8 +16,8 @@ Lições do app do escritório (não repetir):
 
 > **São DOIS builds, não um.** A mesma melhoria entrou nos dois apps:
 > - **Sent 1.0.8 (9)** — este arquivo, abaixo.
-> - **Ecossistema Jurídico 10.0.12 (14)** — `SETUP-MAC.md` do `ejur_app` (`git pull` lá também;
->   tarefa no topo; lá o nome da versão na Apple é 10.0.12, aqui não: o Sent segue normal).
+> - **Ecossistema Jurídico 10.0.12 (15)** — `SETUP-MAC.md` do `ejur_app` (`git pull` lá também;
+>   tarefa no topo).
 
 Último iOS do Sent na loja: 1.0.5. A 1.0.6 e a 1.0.7 saíram só no Android. O que muda no iPhone
 desde a 1.0.5:
