@@ -247,3 +247,7 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   temporário marcou `apagada = true` numa mensagem já carregada (só no app) — "Pode reservar! Como faço o
   pagamento?" da Mariana — e o balão passou a mostrar o conteúdo + ícone 🚫 "apagada · 12:13" no rodapé, sem o
   texto antigo "Mensagem apagada". Nenhum erro.
+- **2026-11-14 (Mac)** — O Alexandre apagou o envio do Transporter e a Apple não aceita repetir o build 10. Build
+  subido para **1.0.8 (11)** (só o número; código igual ao do 10, já conferido) e IPA gerado: br.app.sent, Apple
+  Distribution SK456QD2XZ, `aps-environment=production`, `UIDeviceFamily` só `1`. **Para o Windows**: o próximo
+  Android precisa de build ≥ 11 (o pubspec já está em `1.0.8+11`).
