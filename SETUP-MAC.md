@@ -239,3 +239,6 @@ e enviar para revisão. O Windows conduz esta parte com o Alexandre no App Store
   `flutter analyze`/`flutter test` limpos. **Não deu para ver a marca "apagada"**: nenhuma das 16 conversas do
   demo.sent.app.br tem mensagem apagada (nenhum erro na varredura). **Para o Windows**: marcar uma mensagem de teste
   como apagada no demo (fora da Mariana, que aparece nas capturas) para o Mac conferir.
+- **2026-11-14 (Mac)** — Alexandre enviou o **1.0.8 (10)** pelo Transporter (antes de conferir a marca "apagada" na
+  tela). Falta, no App Store Connect, selecionar o build **10** na versão 1.0.8 (se o 9 já estava em revisão,
+  "Remover da revisão" e trocar) e enviar para revisão. Conferência visual da mensagem apagada continua pendente.
