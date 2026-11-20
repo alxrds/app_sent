@@ -29,7 +29,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   app **não tem** a Agenda da Gestão, Ficha do cliente nem lembretes de tarefa (telas,
   modelos `Tarefa`/`Processo`/`Andamento`/`FichaCliente`, chamadas
   `/gestao/agenda`/`ficha360` e as libs de fuso horário foram removidas). O
-  `Usuario` só tem `admin` e `sac`. Abas: Conversas, Agenda (desde 1.0.9, a agenda do Sent em `/sac`, não a da Gestão) e Perfil. **Nunca**
+  `Usuario` só tem `admin` e `sac`. Abas: Conversas, Agendamentos (desde 1.0.9, a agenda do Sent em `/sac`, não a da Gestão) e Perfil. **Nunca**
   chamar rota `/gestao/*`: no Sent ela devolve 401 e o app desconecta o
   celular — a única exceção é `/gestao/notificacoes/json` (sininho), que o
   servidor do Sent libera pra área de atendimento.
@@ -69,6 +69,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.10 (20/11/2026)**: aba renomeada para **Agendamentos** (igual ao sistema) e **vários responsáveis** por horário (`responsaveis` = "id,id" no salvar; JSON `responsavel_ids`/`responsaveis` e lista `responsaveis` = equipe). 1.0.9 em /root/backups/apps-2026-11-20/sent-1.0.9.apk.
 - **1.0.9 (20/11/2026)**: aba Agenda (`lib/screens/agenda_screen.dart`): semana/próximos 30 dias, pré-reservas,
   detalhe com Confirmar (prévia da mensagem ao cliente), Concluído, Faltou, Cancelar (só este / este e os próximos),
   Editar, Abrir conversa; formulário com repetição; ícone de agenda no topo da conversa; push `tipo=agendamento` abre o
