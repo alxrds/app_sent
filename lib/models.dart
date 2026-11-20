@@ -358,6 +358,8 @@ class Agendamento {
     required this.servicoIds,
     required this.profissionalId,
     required this.profissional,
+    required this.responsavelIds,
+    required this.responsaveis,
     required this.inicio,
     required this.fim,
     required this.local,
@@ -379,6 +381,8 @@ class Agendamento {
     servicoIds: [for (final s in (j['servico_ids'] as List? ?? const [])) _int(s)],
     profissionalId: _int(j['profissional_id']),
     profissional: _texto(j['profissional']),
+    responsavelIds: [for (final r in (j['responsavel_ids'] as List? ?? const [])) _int(r)],
+    responsaveis: _texto(j['responsaveis']).isNotEmpty ? _texto(j['responsaveis']) : _texto(j['profissional']),
     inicio: horarioDaAgenda(j['inicio']) ?? DateTime.now(),
     fim: horarioDaAgenda(j['fim']) ?? DateTime.now(),
     local: _texto(j['local']),
@@ -399,6 +403,8 @@ class Agendamento {
   final List<int> servicoIds;
   final int profissionalId;
   final String profissional;
+  final List<int> responsavelIds;
+  final String responsaveis;
   final DateTime inicio;
   final DateTime fim;
   final String local;
@@ -436,6 +442,7 @@ class DadosDaAgenda {
     required this.preReservas,
     required this.servicos,
     required this.profissionais,
+    required this.responsaveis,
     required this.situacoes,
     required this.repeticoes,
   });
@@ -448,6 +455,7 @@ class DadosDaAgenda {
       preReservas: [for (final p in lista(j['pre_reservas'])) PreReserva.deJson(p)],
       servicos: [for (final s in lista(j['servicos'])) OpcaoAgenda.deJson(s)],
       profissionais: [for (final p in lista(j['profissionais'])) OpcaoAgenda.deJson(p)],
+      responsaveis: [for (final p in lista(j['responsaveis'])) OpcaoAgenda.deJson(p)],
       situacoes: mapa(j['situacoes']),
       repeticoes: mapa(j['repeticoes']),
     );
@@ -457,6 +465,7 @@ class DadosDaAgenda {
   final List<PreReserva> preReservas;
   final List<OpcaoAgenda> servicos;
   final List<OpcaoAgenda> profissionais;
+  final List<OpcaoAgenda> responsaveis;
   final Map<String, String> situacoes;
   final Map<String, String> repeticoes;
 }

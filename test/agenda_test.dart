@@ -19,6 +19,8 @@ final _json = <String, dynamic>{
       'servico_ids': [2, 3],
       'profissional_id': 5,
       'profissional': 'Mariana Souza',
+      'responsavel_ids': [5, 6],
+      'responsaveis': 'Mariana Souza, Paulo Lima',
       'inicio': '2026-11-16 07:00:00',
       'fim': '2026-11-16 07:40:00',
       'local': 'Rua das Flores, 120',
@@ -62,6 +64,10 @@ final _json = <String, dynamic>{
   'profissionais': [
     {'id': 5, 'nome': 'Mariana Souza'},
   ],
+  'responsaveis': [
+    {'id': 5, 'nome': 'Mariana Souza'},
+    {'id': 6, 'nome': 'Paulo Lima'},
+  ],
   'situacoes': {'pre_reserva': 'Pré-reserva', 'confirmado': 'Confirmado', 'concluido': 'Concluído', 'cancelado': 'Cancelado', 'faltou': 'Faltou'},
   'repeticoes': {'nao': 'Não repete', 'semanal': 'Toda semana', 'quinzenal': 'A cada 2 semanas', 'mensal': 'Todo mês'},
 };
@@ -93,6 +99,9 @@ void main() {
     expect(dados.agendamentos.last.encerrado, isTrue);
     expect(dados.repeticoes['quinzenal'], 'A cada 2 semanas');
     expect(dados.preReservas.single.id, 103);
+    expect(a.responsavelIds, [5, 6]);
+    expect(dados.responsaveis.length, 2);
+    expect(dados.agendamentos.last.responsaveis, '');
   });
 
   testWidgets('detalhe cabe no celular', (tester) async {
@@ -104,6 +113,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Confirmar horário'), findsOneWidget);
     expect(find.text('Toda semana, 6 vezes'), findsOneWidget);
+    expect(find.text('Mariana Souza, Paulo Lima'), findsOneWidget);
   });
 
   testWidgets('formulário cabe no celular e mostra a repetição', (tester) async {
@@ -128,6 +138,8 @@ void main() {
     await tester.pumpWidget(_app(FormularioDeAgendamento(dados: dados, agendamento: dados.agendamentos.first)));
     await tester.pumpAndSettle();
     expect(find.text('Este e os próximos'), findsOneWidget);
+    expect(find.text('Responsáveis'.toUpperCase()), findsOneWidget);
+    expect(tester.widget<FilterChip>(find.widgetWithText(FilterChip, 'Paulo Lima')).selected, isTrue);
     expect(find.text('Beatriz Nunes'), findsOneWidget);
   });
 }

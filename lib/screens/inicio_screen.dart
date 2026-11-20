@@ -135,7 +135,7 @@ class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver
 
   String _titulo(_Aba aba) => switch (aba) {
     _Aba.conversas => 'Conversas',
-    _Aba.agenda => 'Agenda',
+    _Aba.agenda => 'Agendamentos',
     _Aba.perfil => 'Perfil',
   };
 
@@ -198,7 +198,7 @@ class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver
                 for (final aba in _abas)
                   switch (aba) {
                     _Aba.conversas => const ItemBarra(Icons.forum_outlined, 'Conversas'),
-                    _Aba.agenda => const ItemBarra(Icons.calendar_month_outlined, 'Agenda'),
+                    _Aba.agenda => const ItemBarra(Icons.calendar_month_outlined, 'Agendamentos'),
                     _Aba.perfil => const ItemBarra(Icons.person_outline, 'Perfil'),
                   },
               ],

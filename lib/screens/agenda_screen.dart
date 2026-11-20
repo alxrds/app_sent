@@ -392,7 +392,7 @@ class _CartaoDoAgendamento extends StatelessWidget {
     final c = context.cores;
     final a = agendamento;
     final cor = corDaSituacao(context, a.situacao);
-    final detalhe = [if (a.servicos.isNotEmpty) a.servicos, if (a.profissional.isNotEmpty) a.profissional].join(' · ');
+    final detalhe = [if (a.servicos.isNotEmpty) a.servicos, if (a.responsaveis.isNotEmpty) a.responsaveis].join(' · ');
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(
@@ -654,7 +654,7 @@ class _DetalheDoAgendamentoState extends State<DetalheDoAgendamento> {
             linha(Icons.event_outlined, '$quando, das ${_hora(_a.inicio)} às ${_hora(_a.fim)}'),
             if (_a.naSerie) linha(Icons.repeat, _a.serie),
             if (_a.servicos.isNotEmpty) linha(Icons.design_services_outlined, _a.servicos),
-            if (_a.profissional.isNotEmpty) linha(Icons.person_outline, _a.profissional),
+            if (_a.responsaveis.isNotEmpty) linha(Icons.person_outline, _a.responsaveis),
             if (_a.local.isNotEmpty) linha(Icons.place_outlined, _a.local),
             if (_a.observacoes.isNotEmpty) linha(Icons.notes_outlined, _a.observacoes),
             if (_a.origem == 'ia') linha(Icons.smart_toy_outlined, 'Marcado pela IA na conversa'),
@@ -716,7 +716,7 @@ class _FormularioDeAgendamentoState extends State<FormularioDeAgendamento> {
   List<ContatoDaAgenda> _resultados = [];
   Timer? _espera;
   final Set<int> _servicos = {};
-  int _profissionalId = 0;
+  final Set<int> _responsaveis = {};
   late DateTime _data;
   TimeOfDay? _inicio;
   TimeOfDay? _fim;
@@ -739,7 +739,7 @@ class _FormularioDeAgendamentoState extends State<FormularioDeAgendamento> {
     if (a != null) {
       _contato = ContatoDaAgenda(contatoId: a.contatoId, conversaId: a.conversaId, nome: a.contato, telefone: a.telefone);
       _servicos.addAll(a.servicoIds);
-      _profissionalId = a.profissionalId;
+      _responsaveis.addAll(a.responsavelIds.isNotEmpty ? a.responsavelIds : [if (a.profissionalId > 0) a.profissionalId]);
       _inicio = TimeOfDay.fromDateTime(a.inicio);
       _fim = TimeOfDay.fromDateTime(a.fim);
       _local.text = a.local;
@@ -837,7 +837,7 @@ class _FormularioDeAgendamentoState extends State<FormularioDeAgendamento> {
       if (contato.contatoId > 0) 'contato_id': '${contato.contatoId}',
       if (contato.conversaId > 0) 'conversa_id': '${contato.conversaId}',
       'servicos': _servicos.join(','),
-      'profissional_id': _profissionalId > 0 ? '$_profissionalId' : '',
+      'responsaveis': _responsaveis.join(','),
       'data': _dia(_data),
       'hora_inicio': _textoDaHora(_inicio),
       'hora_fim': _fim == null ? '' : _textoDaHora(_fim),
@@ -946,15 +946,19 @@ class _FormularioDeAgendamentoState extends State<FormularioDeAgendamento> {
                     ],
                   ),
                 ],
-                if (dados != null && dados.profissionais.isNotEmpty) ...[
-                  titulo('Profissional'),
-                  DropdownButtonFormField<int>(
-                    initialValue: dados.profissionais.any((p) => p.id == _profissionalId) ? _profissionalId : 0,
-                    items: [
-                      const DropdownMenuItem(value: 0, child: Text('Qualquer um')),
-                      for (final p in dados.profissionais) DropdownMenuItem(value: p.id, child: Text(p.nome)),
+                if (dados != null && dados.responsaveis.isNotEmpty) ...[
+                  titulo('Responsáveis'),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final p in dados.responsaveis)
+                        FilterChip(
+                          label: Text(p.nome),
+                          selected: _responsaveis.contains(p.id),
+                          onSelected: (marcado) => setState(() => marcado ? _responsaveis.add(p.id) : _responsaveis.remove(p.id)),
+                        ),
                     ],
-                    onChanged: (v) => setState(() => _profissionalId = v ?? 0),
                   ),
                 ],
                 titulo('Quando'),
