@@ -26,7 +26,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   `TelaCarregando` em `lib/widgets.dart`. Pra regerar ícone/splash:
   `dart run flutter_launcher_icons` e `dart run flutter_native_splash:create`.
 - **Só atendimento e admin**: o Sent não tem Gestão nem Financeiro, então o
-  app **não tem** Agenda, Ficha do cliente nem lembretes de tarefa (telas,
+  app **não tem** a Agenda da Gestão, Ficha do cliente nem lembretes de tarefa (telas,
   modelos `Tarefa`/`Processo`/`Andamento`/`FichaCliente`, chamadas
   `/gestao/agenda`/`ficha360` e as libs de fuso horário foram removidas). O
   `Usuario` só tem `admin` e `sac`. Abas: Conversas, Agenda (desde 1.0.9, a agenda do Sent em `/sac`, não a da Gestão) e Perfil. **Nunca**
