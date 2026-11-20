@@ -420,6 +420,25 @@ class Agendamento {
   bool get encerrado => situacao == 'cancelado' || situacao == 'faltou';
 }
 
+class Bloqueio {
+  Bloqueio({required this.titulo, required this.inicio, required this.fim, required this.responsavel});
+
+  factory Bloqueio.deJson(Map<String, dynamic> j) {
+    final dia = _texto(j['data']);
+    return Bloqueio(
+      titulo: _texto(j['titulo']),
+      inicio: DateTime.tryParse('${dia}T${_texto(j['inicio'])}') ?? DateTime.now(),
+      fim: DateTime.tryParse('${dia}T${_texto(j['fim'])}') ?? DateTime.now(),
+      responsavel: _texto(j['profissional_nome']),
+    );
+  }
+
+  final String titulo;
+  final DateTime inicio;
+  final DateTime fim;
+  final String responsavel;
+}
+
 class PreReserva {
   PreReserva({required this.id, required this.inicio, required this.contato, required this.servicos});
 
@@ -439,6 +458,7 @@ class PreReserva {
 class DadosDaAgenda {
   DadosDaAgenda({
     required this.agendamentos,
+    required this.bloqueios,
     required this.preReservas,
     required this.servicos,
     required this.profissionais,
@@ -452,6 +472,7 @@ class DadosDaAgenda {
     List<Map<String, dynamic>> lista(Object? v) => [for (final i in (v as List? ?? const [])) if (i is Map<String, dynamic>) i];
     return DadosDaAgenda(
       agendamentos: [for (final a in lista(j['agendamentos'])) Agendamento.deJson(a)],
+      bloqueios: [for (final b in lista(j['indisponiveis'])) Bloqueio.deJson(b)],
       preReservas: [for (final p in lista(j['pre_reservas'])) PreReserva.deJson(p)],
       servicos: [for (final s in lista(j['servicos'])) OpcaoAgenda.deJson(s)],
       profissionais: [for (final p in lista(j['profissionais'])) OpcaoAgenda.deJson(p)],
@@ -462,6 +483,7 @@ class DadosDaAgenda {
   }
 
   final List<Agendamento> agendamentos;
+  final List<Bloqueio> bloqueios;
   final List<PreReserva> preReservas;
   final List<OpcaoAgenda> servicos;
   final List<OpcaoAgenda> profissionais;

@@ -52,6 +52,9 @@ final _json = <String, dynamic>{
       'serie': '',
     },
   ],
+  'indisponiveis': [
+    {'id': 1, 'titulo': 'Reunião interna', 'data': '2026-11-16', 'inicio': '14:00', 'fim': '16:00', 'profissional_id': 5, 'profissional_nome': 'Mariana Souza'},
+  ],
   'pre_reservas': [
     {'id': 103, 'inicio': '2026-11-16 07:00:00', 'contato': 'Beatriz Nunes', 'servicos': 'Avaliação'},
   ],
@@ -100,6 +103,8 @@ void main() {
     expect(dados.repeticoes['quinzenal'], 'A cada 2 semanas');
     expect(dados.preReservas.single.id, 103);
     expect(a.responsavelIds, [5, 6]);
+    expect(dados.bloqueios.single.inicio, DateTime(2026, 11, 16, 14));
+    expect(dados.bloqueios.single.fim, DateTime(2026, 11, 16, 16));
     expect(dados.responsaveis.length, 2);
     expect(dados.agendamentos.last.responsaveis, '');
   });

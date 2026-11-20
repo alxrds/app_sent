@@ -185,6 +185,11 @@ class _AgendaScreenState extends State<AgendaScreen> {
         : _proximos
         ? dados.agendamentos
         : dados.agendamentos.where((a) => _mesmoDia(a.inicio, _selecionado)).toList();
+    final bloqueios = dados == null || _proximos ? <Bloqueio>[] : dados.bloqueios.where((b) => _mesmoDia(b.inicio, _selecionado)).toList();
+    final linhas = <({DateTime quando, Agendamento? agendamento, Bloqueio? bloqueio})>[
+      for (final a in itens) (quando: a.inicio, agendamento: a, bloqueio: null),
+      for (final b in bloqueios) (quando: b.inicio, agendamento: null, bloqueio: b),
+    ]..sort((x, y) => x.quando.compareTo(y.quando));
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: Padding(
@@ -252,7 +257,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   ),
                 ),
               )
-            else if (itens.isEmpty)
+            else if (linhas.isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Center(
@@ -266,10 +271,10 @@ class _AgendaScreenState extends State<AgendaScreen> {
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(12, 10, 12, 160),
                 sliver: SliverList.builder(
-                  itemCount: itens.length,
+                  itemCount: linhas.length,
                   itemBuilder: (_, i) {
-                    final a = itens[i];
-                    final novoDia = _proximos && (i == 0 || !_mesmoDia(itens[i - 1].inicio, a.inicio));
+                    final linha = linhas[i];
+                    final novoDia = _proximos && (i == 0 || !_mesmoDia(linhas[i - 1].quando, linha.quando));
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -277,11 +282,14 @@ class _AgendaScreenState extends State<AgendaScreen> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(4, i == 0 ? 0 : 10, 4, 6),
                             child: Text(
-                              toBeginningOfSentenceCase(DateFormat("EEEE, dd 'de' MMMM", 'pt_BR').format(a.inicio)),
+                              toBeginningOfSentenceCase(DateFormat("EEEE, dd 'de' MMMM", 'pt_BR').format(linha.quando)),
                               style: TextStyle(fontWeight: FontWeight.w700, color: c.textoSuave),
                             ),
                           ),
-                        _CartaoDoAgendamento(agendamento: a, aoTocar: () => _abrir(a)),
+                        if (linha.agendamento != null)
+                          _CartaoDoAgendamento(agendamento: linha.agendamento!, aoTocar: () => _abrir(linha.agendamento!))
+                        else
+                          _CartaoDoBloqueio(bloqueio: linha.bloqueio!),
                       ],
                     );
                   },
@@ -455,6 +463,55 @@ class _CartaoDoAgendamento extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CartaoDoBloqueio extends StatelessWidget {
+  const _CartaoDoBloqueio({required this.bloqueio});
+
+  final Bloqueio bloqueio;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.cores;
+    final b = bloqueio;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: c.cartao.withValues(alpha: .55),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: c.linha),
+        ),
+        padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 52,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_hora(b.inicio), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: c.textoSuave)),
+                  Text(_hora(b.fim), style: TextStyle(fontSize: 12, color: c.textoSuave)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(b.titulo.isEmpty ? 'Horário bloqueado' : b.titulo, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w700, color: c.textoSuave)),
+                  Text(b.responsavel.isEmpty ? 'Toda a equipe' : b.responsavel, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13, color: c.textoSuave)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Icons.lock_outline, size: 18, color: c.textoSuave),
+          ],
         ),
       ),
     );

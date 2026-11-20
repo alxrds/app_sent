@@ -69,6 +69,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.11 (20/11/2026)**: a semana mostra os horários bloqueados ("Bloquear horário" do sistema, `indisponiveis` do JSON) com cadeado; "Próximos 30 dias" só agendamentos (igual à Lista do sistema). 1.0.10 em /root/backups/apps-2026-11-20/sent-1.0.10.apk.
 - **1.0.10 (20/11/2026)**: aba renomeada para **Agendamentos** (igual ao sistema) e **vários responsáveis** por horário (`responsaveis` = "id,id" no salvar; JSON `responsavel_ids`/`responsaveis` e lista `responsaveis` = equipe). 1.0.9 em /root/backups/apps-2026-11-20/sent-1.0.9.apk.
 - **1.0.9 (20/11/2026)**: aba Agenda (`lib/screens/agenda_screen.dart`): semana/próximos 30 dias, pré-reservas,
   detalhe com Confirmar (prévia da mensagem ao cliente), Concluído, Faltou, Cancelar (só este / este e os próximos),
