@@ -19,6 +19,7 @@ import '../models.dart';
 import '../texto_rico.dart';
 import '../theme.dart';
 import '../widgets.dart';
+import 'agenda_screen.dart';
 
 class ConversaScreen extends StatefulWidget {
   const ConversaScreen({super.key, required this.conversaId, required this.titulo, required this.perfil, this.interna = false});
@@ -769,6 +770,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
       actions: [
         IconButton(tooltip: 'Buscar na conversa', icon: const Icon(Icons.search), onPressed: _alternarBusca),
         if (!widget.interna) ...[
+          IconButton(tooltip: 'Agendar', icon: const Icon(Icons.event_available_outlined), onPressed: _agendar),
           IconButton(tooltip: 'Transferir', icon: const Icon(Icons.swap_horiz), onPressed: _enviando ? null : _transferir),
           IconButton(
             tooltip: 'Encerrar atendimento',
@@ -777,6 +779,14 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
           ),
         ],
       ],
+    );
+  }
+
+  Future<void> _agendar() async {
+    await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => FormularioDeAgendamento(conversaId: widget.conversaId, nomeDoContato: _conversa?.contatoNome ?? widget.titulo),
+      ),
     );
   }
 

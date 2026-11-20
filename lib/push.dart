@@ -97,6 +97,7 @@ class Push {
       'conversa' => 'conversa:${dados['conversa_id']}|$titulo',
       'interno' => 'interno:${dados['colega_id']}|$titulo',
       'tarefa' => 'tarefa:${dados['tarefa_id']}',
+      'agendamento' => 'agendamento:${dados['agendamento_id']}',
       _ => null,
     };
   }

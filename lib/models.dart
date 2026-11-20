@@ -334,3 +334,145 @@ class Notificacao {
   final int? conversaId;
   final int? colegaId;
 }
+
+DateTime? horarioDaAgenda(Object? valor) => DateTime.tryParse(_texto(valor).replaceFirst(' ', 'T'));
+
+class OpcaoAgenda {
+  OpcaoAgenda({required this.id, required this.nome, this.duracaoMin = 0});
+
+  factory OpcaoAgenda.deJson(Map<String, dynamic> j) => OpcaoAgenda(id: _int(j['id']), nome: _texto(j['nome']), duracaoMin: _int(j['duracao_min']));
+
+  final int id;
+  final String nome;
+  final int duracaoMin;
+}
+
+class Agendamento {
+  Agendamento({
+    required this.id,
+    required this.contatoId,
+    required this.conversaId,
+    required this.contato,
+    required this.telefone,
+    required this.servicos,
+    required this.servicoIds,
+    required this.profissionalId,
+    required this.profissional,
+    required this.inicio,
+    required this.fim,
+    required this.local,
+    required this.observacoes,
+    required this.situacao,
+    required this.situacaoNome,
+    required this.origem,
+    required this.serieId,
+    required this.serie,
+  });
+
+  factory Agendamento.deJson(Map<String, dynamic> j) => Agendamento(
+    id: _int(j['id']),
+    contatoId: _int(j['contato_id']),
+    conversaId: _int(j['conversa_id']),
+    contato: _texto(j['contato']),
+    telefone: _texto(j['telefone']),
+    servicos: _texto(j['servicos']),
+    servicoIds: [for (final s in (j['servico_ids'] as List? ?? const [])) _int(s)],
+    profissionalId: _int(j['profissional_id']),
+    profissional: _texto(j['profissional']),
+    inicio: horarioDaAgenda(j['inicio']) ?? DateTime.now(),
+    fim: horarioDaAgenda(j['fim']) ?? DateTime.now(),
+    local: _texto(j['local']),
+    observacoes: _texto(j['observacoes']),
+    situacao: _texto(j['situacao']),
+    situacaoNome: _texto(j['situacao_nome']),
+    origem: _texto(j['origem']),
+    serieId: _int(j['serie_id']),
+    serie: _texto(j['serie']),
+  );
+
+  final int id;
+  final int contatoId;
+  final int conversaId;
+  final String contato;
+  final String telefone;
+  final String servicos;
+  final List<int> servicoIds;
+  final int profissionalId;
+  final String profissional;
+  final DateTime inicio;
+  final DateTime fim;
+  final String local;
+  final String observacoes;
+  final String situacao;
+  final String situacaoNome;
+  final String origem;
+  final int serieId;
+  final String serie;
+
+  bool get naSerie => serieId > 0;
+  bool get preReserva => situacao == 'pre_reserva';
+  bool get encerrado => situacao == 'cancelado' || situacao == 'faltou';
+}
+
+class PreReserva {
+  PreReserva({required this.id, required this.inicio, required this.contato, required this.servicos});
+
+  factory PreReserva.deJson(Map<String, dynamic> j) => PreReserva(
+    id: _int(j['id']),
+    inicio: horarioDaAgenda(j['inicio']) ?? DateTime.now(),
+    contato: _texto(j['contato']),
+    servicos: _texto(j['servicos']),
+  );
+
+  final int id;
+  final DateTime inicio;
+  final String contato;
+  final String servicos;
+}
+
+class DadosDaAgenda {
+  DadosDaAgenda({
+    required this.agendamentos,
+    required this.preReservas,
+    required this.servicos,
+    required this.profissionais,
+    required this.situacoes,
+    required this.repeticoes,
+  });
+
+  factory DadosDaAgenda.deJson(Map<String, dynamic> j) {
+    Map<String, String> mapa(Object? v) => v is Map ? {for (final e in v.entries) '${e.key}': _texto(e.value)} : const {};
+    List<Map<String, dynamic>> lista(Object? v) => [for (final i in (v as List? ?? const [])) if (i is Map<String, dynamic>) i];
+    return DadosDaAgenda(
+      agendamentos: [for (final a in lista(j['agendamentos'])) Agendamento.deJson(a)],
+      preReservas: [for (final p in lista(j['pre_reservas'])) PreReserva.deJson(p)],
+      servicos: [for (final s in lista(j['servicos'])) OpcaoAgenda.deJson(s)],
+      profissionais: [for (final p in lista(j['profissionais'])) OpcaoAgenda.deJson(p)],
+      situacoes: mapa(j['situacoes']),
+      repeticoes: mapa(j['repeticoes']),
+    );
+  }
+
+  final List<Agendamento> agendamentos;
+  final List<PreReserva> preReservas;
+  final List<OpcaoAgenda> servicos;
+  final List<OpcaoAgenda> profissionais;
+  final Map<String, String> situacoes;
+  final Map<String, String> repeticoes;
+}
+
+class ContatoDaAgenda {
+  ContatoDaAgenda({required this.contatoId, required this.conversaId, required this.nome, required this.telefone});
+
+  factory ContatoDaAgenda.deJson(Map<String, dynamic> j) => ContatoDaAgenda(
+    contatoId: _int(j['contato_id']),
+    conversaId: _int(j['conversa_id']),
+    nome: _texto(j['nome']),
+    telefone: _texto(j['telefone']),
+  );
+
+  final int contatoId;
+  final int conversaId;
+  final String nome;
+  final String telefone;
+}

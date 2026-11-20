@@ -9,6 +9,7 @@ import '../models.dart';
 import '../push.dart';
 import '../theme.dart';
 import '../widgets.dart';
+import 'agenda_screen.dart';
 import 'conversa_screen.dart';
 import 'conversas_screen.dart';
 import 'perfil_screen.dart';
@@ -25,10 +26,11 @@ class InicioScreen extends StatefulWidget {
   State<InicioScreen> createState() => _InicioScreenState();
 }
 
-enum _Aba { conversas, perfil }
+enum _Aba { conversas, agenda, perfil }
 
 class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver {
-  late final List<_Aba> _abas = [if (widget.perfil.usuario.sac) _Aba.conversas, _Aba.perfil];
+  late final List<_Aba> _abas = [if (widget.perfil.usuario.sac) _Aba.conversas, if (widget.perfil.usuario.sac) _Aba.agenda, _Aba.perfil];
+  final _abrirAgendamento = ValueNotifier<int?>(null);
   int _indice = 0;
   Timer? _presenca;
   Timer? _sino;
@@ -59,6 +61,13 @@ class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver
       return;
     }
     Lembretes.toque.value = null;
+    final agendamento = RegExp(r'^agendamento:(\d+)$').firstMatch(payload);
+    if (agendamento != null && _abas.contains(_Aba.agenda)) {
+      Navigator.of(context).popUntil((rota) => rota.isFirst);
+      setState(() => _indice = _abas.indexOf(_Aba.agenda));
+      _abrirAgendamento.value = int.parse(agendamento.group(1)!);
+      return;
+    }
     final conversa = RegExp(r'^(conversa|interno):(\d+)\|(.*)$').firstMatch(payload);
     if (conversa != null && _abas.contains(_Aba.conversas)) {
       Navigator.of(context).popUntil((rota) => rota.isFirst);
@@ -82,6 +91,7 @@ class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver
     Lembretes.toque.removeListener(_tocouLembrete);
     _presenca?.cancel();
     _sino?.cancel();
+    _abrirAgendamento.dispose();
     super.dispose();
   }
 
@@ -125,6 +135,7 @@ class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver
 
   String _titulo(_Aba aba) => switch (aba) {
     _Aba.conversas => 'Conversas',
+    _Aba.agenda => 'Agenda',
     _Aba.perfil => 'Perfil',
   };
 
@@ -172,6 +183,7 @@ class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver
           for (final aba in _abas)
             switch (aba) {
               _Aba.conversas => ConversasScreen(perfil: widget.perfil, aoMudarFila: (n) => setState(() => _filaTotal = n)),
+              _Aba.agenda => AgendaScreen(perfil: widget.perfil, abrirAgendamento: _abrirAgendamento),
               _Aba.perfil => PerfilScreen(perfil: widget.perfil, aoSair: widget.aoSair),
             },
         ],
@@ -186,6 +198,7 @@ class _InicioScreenState extends State<InicioScreen> with WidgetsBindingObserver
                 for (final aba in _abas)
                   switch (aba) {
                     _Aba.conversas => const ItemBarra(Icons.forum_outlined, 'Conversas'),
+                    _Aba.agenda => const ItemBarra(Icons.calendar_month_outlined, 'Agenda'),
                     _Aba.perfil => const ItemBarra(Icons.person_outline, 'Perfil'),
                   },
               ],

@@ -12,7 +12,30 @@ Lições do app do escritório (não repetir):
 - Push e permissões só valem se o `scripts/ipa.sh` gravar o `Runner.entitlements` no
   archive — sempre gerar pelo script, nunca pelo Xcode direto.
 
-## ➡️ AGORA (14/11 tarde, do Windows): novo IPA 1.0.8 (10) — substitui o (9)
+## ➡️ AGORA (20/11, do Windows): IPA 1.0.9 (12) — aba Agenda
+
+> **Aba Agenda nova (pedido do Alexandre, 19/11).** O Android 1.0.9 já está na UAU Store. O que muda no iPhone:
+> - Aba **Agenda** entre Conversas e Perfil: semana com os dias, "Próximos 30 dias", aviso de pré-reservas.
+> - Tocar num horário: Confirmar (mostra a mensagem que vai para o cliente antes de enviar), Concluído, Faltou,
+>   Cancelar (só este ou este e os próximos quando repete), Editar, Abrir conversa.
+> - Botão **Agendar** (+) e, dentro da conversa, ícone de agenda no topo: novo horário com cliente, serviços,
+>   profissional, horário, situação e **repetição** (toda semana, a cada 2 semanas, todo mês; até uma data ou N vezes).
+> - Notificação "Pré-reserva para confirmar" abre o horário.
+>
+> ```bash
+> cd "$HOME/dev/_apps/sent_app" && git pull && flutter pub get && flutter analyze && flutter test
+> grep -n "^version" pubspec.yaml   # 1.0.9+12
+> ./scripts/ipa.sh
+> ```
+> Simulador no demo do Sent (código de revisão `ZYZB9DQ6`, empresa `demo.sent.app.br`): aba Agenda abre na semana atual
+> (o demo tem horários fictícios em novembro), tocar num horário abre o detalhe, criar um horário com "Toda semana, 3
+> vezes" e depois **cancelar este e os próximos** para não sujar o demo. Conferir que nada sai da tela (seletores de
+> data e hora em português). Conferir no IPA versão **1.0.9**, build **12**, `aps-environment=production`,
+> `UIDeviceFamily` só `1`. O Alexandre cria a versão 1.0.9 no App Store Connect e envia pelo Transporter. Texto de
+> novidades: "Agenda no celular: veja os horários da semana, confirme pré-reservas, marque e remarque atendimentos,
+> inclusive os que se repetem." Capturas: se quiser, trocar uma pela aba Agenda (demo).
+
+## Feito antes (14/11 tarde, do Windows): novo IPA 1.0.8 (10) — substitui o (9)
 
 > **Mensagem apagada pelo cliente continua aparecendo (14/11, pedido do Alexandre).** O app trocava o
 > conteúdo por "Mensagem apagada"; a regra é a do painel web: o que recebemos fica visível, só ganha a marca

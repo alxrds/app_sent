@@ -189,6 +189,38 @@ class EcoApi {
 
   Future<void> encerrar(int conversaId) => _post('/sac/api/encerrar/$conversaId');
 
+  Future<DadosDaAgenda> agenda(DateTime de, DateTime ate, {int profissionalId = 0}) async {
+    String dia(DateTime d) => '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+    final dados = await _get('/sac/api/agenda?de=${dia(de)}&ate=${dia(ate)}${profissionalId > 0 ? '&profissional=$profissionalId' : ''}');
+    return DadosDaAgenda.deJson(dados);
+  }
+
+  Future<Agendamento> agendamento(int id) async {
+    final dados = await _get('/sac/api/agendamento/$id');
+    return Agendamento.deJson(dados['agendamento'] as Map<String, dynamic>);
+  }
+
+  Future<({int id, int criados})> salvarAgendamento(int id, Map<String, String> campos) async {
+    final dados = await _post(id > 0 ? '/sac/agendamentos/$id/salvar' : '/sac/agendamentos/salvar', campos);
+    return (id: dados['id'] is num ? (dados['id'] as num).toInt() : id, criados: dados['criados'] is num ? (dados['criados'] as num).toInt() : 1);
+  }
+
+  Future<void> mudarSituacaoDoAgendamento(int id, String situacao, {bool esteEProximos = false}) =>
+      _post('/sac/agendamentos/$id/situacao', {'situacao': situacao, if (esteEProximos) 'aplicar': 'proximos'});
+
+  Future<String> mensagemDeConfirmacao(int id) async {
+    final dados = await _get('/sac/agendamentos/$id/mensagem-confirmacao');
+    return dados['texto'] is String ? dados['texto'] as String : '';
+  }
+
+  Future<void> confirmarAgendamento(int id, {required bool avisar, String texto = ''}) =>
+      _post('/sac/agendamentos/$id/confirmar', {if (avisar) 'avisar': '1', if (avisar) 'texto': texto});
+
+  Future<List<ContatoDaAgenda>> contatosParaAgenda(String busca) async {
+    final dados = await _get('/sac/api/agenda-contatos?q=${Uri.encodeQueryComponent(busca)}');
+    return [for (final c in (dados['contatos'] as List? ?? const [])) if (c is Map<String, dynamic>) ContatoDaAgenda.deJson(c)];
+  }
+
   Future<void> heartbeat() async {
     try {
       await _post('/sac/api/heartbeat');

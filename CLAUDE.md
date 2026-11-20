@@ -29,7 +29,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   app **não tem** Agenda, Ficha do cliente nem lembretes de tarefa (telas,
   modelos `Tarefa`/`Processo`/`Andamento`/`FichaCliente`, chamadas
   `/gestao/agenda`/`ficha360` e as libs de fuso horário foram removidas). O
-  `Usuario` só tem `admin` e `sac`. Abas: Conversas e Perfil. **Nunca**
+  `Usuario` só tem `admin` e `sac`. Abas: Conversas, Agenda (desde 1.0.9, a agenda do Sent em `/sac`, não a da Gestão) e Perfil. **Nunca**
   chamar rota `/gestao/*`: no Sent ela devolve 401 e o app desconecta o
   celular — a única exceção é `/gestao/notificacoes/json` (sininho), que o
   servidor do Sent libera pra área de atendimento.
@@ -69,6 +69,12 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.9 (20/11/2026)**: aba Agenda (`lib/screens/agenda_screen.dart`): semana/próximos 30 dias, pré-reservas,
+  detalhe com Confirmar (prévia da mensagem ao cliente), Concluído, Faltou, Cancelar (só este / este e os próximos),
+  Editar, Abrir conversa; formulário com repetição; ícone de agenda no topo da conversa; push `tipo=agendamento` abre o
+  horário. Rotas: `/sac/api/agenda`, `/sac/api/agendamento/{id}`, `/sac/agendamentos/*` (iguais no Sent e na UAU).
+  Botão `FilledButton` do tema tem largura infinita: em diálogo/AppBar usar estilo compacto (`_compacto`). Testes em
+  `test/agenda_test.dart` desenham as telas em 390 px. Assinatura conferida; 1.0.8 em /root/backups/apps-2026-11-20/.
 - **1.0.8 (14/11/2026)**: conversa abre na última mensagem (lista invertida; antes abria no meio em conversa longa) e botão redondo com seta para descer, com bolinha quando chega mensagem nova; acentos dos avisos de áudio. Assinatura conferida; 1.0.7 em /root/backups/apps-2026-11-14/. iOS 1.0.8 (9) pedido ao Mac (SETUP-MAC.md).
 - **1.0.7 (11/11/2026, Android)**: documento com legenda mostrava só a legenda (o WhatsApp manda a legenda no lugar do nome do arquivo); agora cartão "Planilha (XLSX)", "PDF" etc. para abrir e a legenda embaixo. Mesma correção no app do escritório (sem build ainda). 1.0.6 em /root/backups/sent-app-1.0.7-2026-11-11/.
 - **1.0.6 (04/11/2026, só Android)**: ícone e cor da notificação eram cópia do Ecossistema; agora balão do Sent e azul #3D8FD1. iPhone usa o ícone do app e não precisou de build. Assinatura conferida; 1.0.5 guardado em
