@@ -12,9 +12,9 @@ Lições do app do escritório (não repetir):
 - Push e permissões só valem se o `scripts/ipa.sh` gravar o `Runner.entitlements` no
   archive — sempre gerar pelo script, nunca pelo Xcode direto.
 
-## ➡️ AGORA (20/11, do Windows): IPA 1.0.11 (14) — aba Agendamentos
+## ➡️ AGORA (20/11, do Windows): IPA 1.0.12 (15) — aba Agendamentos
 
-> **Aba Agendamentos nova (pedido do Alexandre, 19–20/11).** O Android 1.0.11 já está na UAU Store. O que muda no iPhone:
+> **Aba Agendamentos nova (pedido do Alexandre, 19–20/11).** O Android 1.0.12 já está na UAU Store. O que muda no iPhone:
 > - Aba **Agendamentos** entre Conversas e Perfil (mesmo nome do sistema): semana com os dias, "Próximos 30 dias", aviso de pré-reservas e os horários bloqueados do dia.
 > - Tocar num horário: Confirmar (mostra a mensagem que vai para o cliente antes de enviar), Concluído, Faltou,
 >   Cancelar (só este ou este e os próximos quando repete), Editar, Abrir conversa.
@@ -24,14 +24,14 @@ Lições do app do escritório (não repetir):
 >
 > ```bash
 > cd "$HOME/dev/_apps/sent_app" && git pull && flutter pub get && flutter analyze && flutter test
-> grep -n "^version" pubspec.yaml   # 1.0.11+14
+> grep -n "^version" pubspec.yaml   # 1.0.12+15
 > ./scripts/ipa.sh
 > ```
 > Simulador no demo do Sent (código de revisão `ZYZB9DQ6`, empresa `demo.sent.app.br`): aba Agendamentos abre na semana atual
 > (o demo tem horários fictícios em novembro), tocar num horário abre o detalhe, criar um horário com "Toda semana, 3
 > vezes" e depois **cancelar este e os próximos** para não sujar o demo. Conferir que nada sai da tela (seletores de
-> data e hora em português). Conferir no IPA versão **1.0.11**, build **14**, `aps-environment=production`,
-> `UIDeviceFamily` só `1`. O Alexandre cria a versão 1.0.11 no App Store Connect e envia pelo Transporter. Texto de
+> data e hora em português). Conferir no IPA versão **1.0.12**, build **15**, `aps-environment=production`,
+> `UIDeviceFamily` só `1`. O Alexandre cria a versão 1.0.12 no App Store Connect e envia pelo Transporter. Texto de
 > novidades: "Agendamentos no celular: veja os horários da semana, confirme pré-reservas, marque e remarque atendimentos,
 > inclusive os que se repetem." Capturas: se quiser, trocar uma pela aba Agendamentos (demo).
 

@@ -185,7 +185,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
         : _proximos
         ? dados.agendamentos
         : dados.agendamentos.where((a) => _mesmoDia(a.inicio, _selecionado)).toList();
-    final bloqueios = dados == null || _proximos ? <Bloqueio>[] : dados.bloqueios.where((b) => _mesmoDia(b.inicio, _selecionado)).toList();
+    final bloqueios = dados == null ? <Bloqueio>[] : _proximos ? dados.bloqueios : dados.bloqueios.where((b) => _mesmoDia(b.inicio, _selecionado)).toList();
     final linhas = <({DateTime quando, Agendamento? agendamento, Bloqueio? bloqueio})>[
       for (final a in itens) (quando: a.inicio, agendamento: a, bloqueio: null),
       for (final b in bloqueios) (quando: b.inicio, agendamento: null, bloqueio: b),
