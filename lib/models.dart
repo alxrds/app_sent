@@ -174,6 +174,10 @@ class Mensagem {
     required this.status,
     required this.criadoEm,
     this.reacao = '',
+    this.editadaEm,
+    this.textoOriginal,
+    this.editadaPor,
+    this.apagadaPor,
   });
 
   factory Mensagem.deJson(Map<String, dynamic> j) => Mensagem(
@@ -195,6 +199,10 @@ class Mensagem {
     status: _texto(j['status']),
     criadoEm: dataDoServidor(j['criado_em']),
     reacao: _texto(j['reacao']),
+    editadaEm: dataDoServidor(j['editada_em']),
+    textoOriginal: _texto(j['texto_original']).isNotEmpty ? _texto(j['texto_original']) : null,
+    editadaPor: _texto(j['editada_por']).isNotEmpty ? _texto(j['editada_por']) : null,
+    apagadaPor: _texto(j['apagada_por']).isNotEmpty ? _texto(j['apagada_por']) : null,
   );
 
   final int id;
@@ -215,7 +223,12 @@ class Mensagem {
   String status;
   final DateTime? criadoEm;
   String reacao;
+  DateTime? editadaEm;
+  String? textoOriginal;
+  String? editadaPor;
+  String? apagadaPor;
 
+  bool get editada => editadaEm != null;
   bool get enviada => direcao == 'saida';
   bool get evento => tipo == 'evento';
 

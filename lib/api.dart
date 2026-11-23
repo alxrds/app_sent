@@ -189,6 +189,18 @@ class EcoApi {
 
   Future<void> encerrar(int conversaId) => _post('/sac/api/encerrar/$conversaId');
 
+  Future<({bool ok, String aviso})> apagarMensagem(int mensagemId, {bool interna = false}) async {
+    final rota = interna ? '/sac/api/interno/apagar/$mensagemId' : '/sac/api/apagar/$mensagemId';
+    final r = await _post(rota);
+    return (ok: r['ok'] == true, aviso: '${r['aviso'] ?? r['erro'] ?? ''}');
+  }
+
+  Future<({bool ok, String aviso})> editarMensagem(int mensagemId, String novoTexto, {bool interna = false}) async {
+    final rota = interna ? '/sac/api/interno/editar/$mensagemId' : '/sac/api/editar/$mensagemId';
+    final r = await _post(rota, {'texto': novoTexto});
+    return (ok: r['ok'] == true, aviso: '${r['aviso'] ?? r['erro'] ?? ''}');
+  }
+
   Future<DadosDaAgenda> agenda(DateTime de, DateTime ate, {int profissionalId = 0}) async {
     String dia(DateTime d) => '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
     final dados = await _get('/sac/api/agenda?de=${dia(de)}&ate=${dia(ate)}${profissionalId > 0 ? '&profissional=$profissionalId' : ''}');

@@ -641,7 +641,13 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
   Future<void> _menuMensagem(Mensagem m) async {
     final texto = m.conteudo.isNotEmpty ? m.conteudo : m.transcricao;
     final podeResponder = _podeResponder(m);
-    if (!podeResponder && texto.isEmpty) return;
+    final diferencaMinutos = m.criadoEm != null ? DateTime.now().difference(m.criadoEm!).inMinutes : 0;
+    final diferencaHoras = m.criadoEm != null ? DateTime.now().difference(m.criadoEm!).inHours : 0;
+    final podeEditar = m.enviada && !m.apagada && m.tipo == 'texto' && (m.interna || diferencaMinutos <= 15);
+    final podeApagar = m.enviada && !m.apagada && (m.interna || diferencaHoras <= 48);
+    final temHistorico = m.editada && (m.textoOriginal?.isNotEmpty ?? false);
+
+    if (!podeResponder && texto.isEmpty && !podeEditar && !podeApagar && !temHistorico) return;
     HapticFeedback.mediumImpact();
     FocusScope.of(context).unfocus();
     final opcao = await showModalBottomSheet<String>(
@@ -653,12 +659,27 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-              child: Text(m.resumo, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: contexto.cores.textoSuave)),
+              child: Text(
+                m.resumo,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: contexto.cores.textoSuave),
+              ),
             ),
             if (podeResponder)
               ListTile(leading: const Icon(Icons.reply_rounded), title: const Text('Responder'), onTap: () => Navigator.pop(contexto, 'responder')),
+            if (podeEditar)
+              ListTile(leading: const Icon(Icons.edit_outlined), title: const Text('Editar texto'), onTap: () => Navigator.pop(contexto, 'editar')),
             if (texto.isNotEmpty)
               ListTile(leading: const Icon(Icons.copy_rounded), title: const Text('Copiar texto'), onTap: () => Navigator.pop(contexto, 'copiar')),
+            if (temHistorico)
+              ListTile(leading: const Icon(Icons.history_rounded), title: const Text('Ver texto original'), onTap: () => Navigator.pop(contexto, 'historico')),
+            if (podeApagar)
+              ListTile(
+                leading: const Icon(Icons.delete_outline, color: Color(0xFFE0556B)),
+                title: Text(m.interna ? 'Apagar nota' : 'Apagar no WhatsApp', style: const TextStyle(color: Color(0xFFE0556B))),
+                onTap: () => Navigator.pop(contexto, 'apagar'),
+              ),
           ],
         ),
       ),
@@ -666,9 +687,145 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     if (!mounted || opcao == null) return;
     if (opcao == 'responder') {
       _responder(m);
-    } else {
+    } else if (opcao == 'copiar') {
       await Clipboard.setData(ClipboardData(text: texto));
       if (mounted) mostrarAviso(context, 'Texto copiado.');
+    } else if (opcao == 'editar') {
+      await _editarMensagem(m);
+    } else if (opcao == 'apagar') {
+      await _apagarMensagem(m);
+    } else if (opcao == 'historico') {
+      await _verOriginal(m);
+    }
+  }
+
+  Future<void> _verOriginal(Mensagem m) async {
+    final original = m.textoOriginal ?? '';
+    if (original.isEmpty) return;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.history_rounded, size: 20),
+            SizedBox(width: 8),
+            Text('Histórico de edição', style: TextStyle(fontSize: 16)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Texto original enviado:', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+            const SizedBox(height: 4),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: .05),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SelectableText(original, style: const TextStyle(fontSize: 14)),
+            ),
+            const SizedBox(height: 12),
+            const Text('Texto atual corrigido:', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+            const SizedBox(height: 4),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: .05),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SelectableText(m.conteudo, style: const TextStyle(fontSize: 14)),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Fechar')),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _editarMensagem(Mensagem m) async {
+    final controlador = TextEditingController(text: m.conteudo);
+    final salvo = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Editar mensagem'),
+        content: TextField(
+          controller: controlador,
+          maxLines: 5,
+          minLines: 1,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'Digite o novo texto...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, controlador.text.trim()),
+            child: const Text('Salvar'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || salvo == null || salvo.isEmpty || salvo == m.conteudo) return;
+    try {
+      final r = await EcoApi.instancia.editarMensagem(m.id, salvo, interna: widget.interna);
+      if (!mounted) return;
+      if (r.ok) {
+        setState(() {
+          m.textoOriginal ??= m.conteudo;
+          m.conteudo = salvo;
+          m.editadaEm = DateTime.now();
+        });
+        mostrarAviso(context, 'Mensagem editada com sucesso.');
+      } else {
+        mostrarAviso(context, r.aviso.isNotEmpty ? r.aviso : 'Não foi possível editar a mensagem.');
+      }
+    } catch (e) {
+      if (mounted) mostrarAviso(context, 'Erro ao editar mensagem: $e');
+    }
+  }
+
+  Future<void> _apagarMensagem(Mensagem m) async {
+    final titulo = m.interna ? 'Apagar nota interna?' : 'Apagar para todos?';
+    final texto = m.interna
+        ? 'A nota será marcada como apagada no chat interno, mantendo o registro para auditoria probatória.'
+        : 'A mensagem será apagada para todos no WhatsApp. No sistema ela continuará registrada para auditoria probatória.';
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(titulo),
+        content: Text(texto),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFE0556B)),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Apagar'),
+          ),
+        ],
+      ),
+    );
+    if (confirmar != true || !mounted) return;
+    try {
+      final r = await EcoApi.instancia.apagarMensagem(m.id, interna: widget.interna);
+      if (!mounted) return;
+      if (r.ok) {
+        setState(() {
+          m.apagada = true;
+        });
+        mostrarAviso(context, m.interna ? 'Nota apagada.' : 'Mensagem apagada no WhatsApp.');
+      } else {
+        mostrarAviso(context, r.aviso.isNotEmpty ? r.aviso : 'Não foi possível apagar a mensagem.');
+      }
+    } catch (e) {
+      if (mounted) mostrarAviso(context, 'Erro ao apagar mensagem: $e');
     }
   }
 
@@ -855,6 +1012,8 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
                   autorCitacao: _autorDaCitacao(m),
                   destacada: _destacada == m.id,
                   aoTocarCitacao: m.citaWaId.isEmpty ? null : () => _irParaOriginal(m.citaWaId),
+                  aoAbrirMenu: () => _menuMensagem(m),
+                  aoVerHistorico: m.editada ? () => _verOriginal(m) : null,
                 ),
               ),
           ],
@@ -1284,12 +1443,21 @@ class _ArrastarParaResponderState extends State<_ArrastarParaResponder> {
 }
 
 class _Balao extends StatelessWidget {
-  const _Balao({required this.mensagem, this.autorCitacao = '', this.destacada = false, this.aoTocarCitacao});
+  const _Balao({
+    required this.mensagem,
+    this.autorCitacao = '',
+    this.destacada = false,
+    this.aoTocarCitacao,
+    this.aoAbrirMenu,
+    this.aoVerHistorico,
+  });
 
   final Mensagem mensagem;
   final String autorCitacao;
   final bool destacada;
   final VoidCallback? aoTocarCitacao;
+  final VoidCallback? aoAbrirMenu;
+  final VoidCallback? aoVerHistorico;
 
   @override
   Widget build(BuildContext context) {
@@ -1330,7 +1498,7 @@ class _Balao extends StatelessWidget {
           decoration: BoxDecoration(
             color: cor,
             borderRadius: BorderRadius.only(topLeft: raio, topRight: raio, bottomLeft: minha ? raio : ponta, bottomRight: minha ? ponta : raio),
-            border: mensagem.interna ? Border.all(color: const Color(0xFFD9A21B).withValues(alpha: .45)) : null,
+            border: mensagem.apagada ? Border.all(color: c.textoSuave.withValues(alpha: .35), width: 1) : (mensagem.interna ? Border.all(color: const Color(0xFFD9A21B).withValues(alpha: .45)) : null),
             boxShadow: [if (!minha) BoxShadow(color: Colors.black.withValues(alpha: .06), blurRadius: 8, offset: const Offset(0, 2))],
           ),
           child: DefaultTextStyle.merge(
@@ -1405,7 +1573,20 @@ class _Balao extends StatelessWidget {
                     if (mensagem.apagada) ...[
                       Icon(Icons.block, size: 12, color: corRodape),
                       const SizedBox(width: 3),
-                      Text('apagada · ', style: TextStyle(fontSize: 11, color: corRodape, fontStyle: FontStyle.italic)),
+                      Text(mensagem.interna ? 'nota apagada · ' : 'apagada no WhatsApp · ', style: TextStyle(fontSize: 11, color: corRodape, fontStyle: FontStyle.italic)),
+                    ],
+                    if (mensagem.editada) ...[
+                      GestureDetector(
+                        onTap: aoVerHistorico,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.edit, size: 11, color: corRodape),
+                            const SizedBox(width: 2),
+                            Text('editada · ', style: TextStyle(fontSize: 11, color: corRodape, fontStyle: FontStyle.italic, decoration: TextDecoration.underline)),
+                          ],
+                        ),
+                      ),
                     ],
                     Flexible(
                       child: Text(rodape, style: TextStyle(fontSize: 11, color: corRodape)),
@@ -1416,6 +1597,17 @@ class _Balao extends StatelessWidget {
                         mensagem.status == 'erro' ? Icons.error_outline : (mensagem.status == 'lido' ? Icons.done_all : Icons.done),
                         size: 14,
                         color: mensagem.status == 'erro' ? const Color(0xFFFF8A80) : (mensagem.status == 'lido' ? const Color(0xFF7FD6FF) : corRodape),
+                      ),
+                    ],
+                    if (aoAbrirMenu != null) ...[
+                      const SizedBox(width: 4),
+                      InkWell(
+                        onTap: aoAbrirMenu,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: Icon(Icons.keyboard_arrow_down, size: 15, color: corRodape),
+                        ),
                       ),
                     ],
                   ],
