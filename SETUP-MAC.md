@@ -12,6 +12,23 @@ Lições do app do escritório (não repetir):
 - Push e permissões só valem se o `scripts/ipa.sh` gravar o `Runner.entitlements` no
   archive — sempre gerar pelo script, nunca pelo Xcode direto.
 
+## ➡️ AGORA (25/11, do Windows): IPA 1.0.13 (16) — substitui o 1.0.12 (15), que não foi enviado
+
+> O Alexandre vai fazer o build do iPhone hoje. O Android 1.0.13 já está na UAU Store. Vai junto tudo o que ainda não
+> foi para o iPhone: a **aba Agendamentos** (seção logo abaixo, a do 1.0.12, com o roteiro de teste), **editar, apagar
+> para todos e ver o original** pela seta do balão (23/11) e o **separador de dia como no WhatsApp** ("Hoje", "Ontem",
+> dia da semana ou "15/11/2026"; chip no topo ao rolar que some 1,5 s depois de parar; 25/11).
+>
+> ```bash
+> cd "$HOME/dev/_apps/sent_app" && git pull && flutter pub get && flutter analyze && flutter test
+> grep -n "^version" pubspec.yaml   # 1.0.13+16
+> ./scripts/ipa.sh
+> ```
+> Testar no Simulador o roteiro da aba Agendamentos (abaixo) e o chip do dia numa conversa longa. Conferir no IPA versão
+> **1.0.13**, build **16**, `aps-environment=production`, `UIDeviceFamily` só `1`. O Alexandre cria a versão 1.0.13 no
+> App Store Connect e envia pelo Transporter. Novidades: "Agendamentos no celular (semana, pré-reservas, horários que se
+> repetem), datas na conversa como no WhatsApp e mensagens enviadas podem ser editadas ou apagadas."
+
 ## ➡️ AGORA (20/11, do Windows): IPA 1.0.12 (15) — aba Agendamentos
 
 > **Aba Agendamentos nova (pedido do Alexandre, 19–20/11).** O Android 1.0.12 já está na UAU Store. O que muda no iPhone:
