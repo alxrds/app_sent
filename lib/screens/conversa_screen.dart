@@ -678,6 +678,8 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
               ListTile(leading: const Icon(Icons.edit_outlined), title: const Text('Editar texto'), onTap: () => Navigator.pop(contexto, 'editar')),
             if (texto.isNotEmpty)
               ListTile(leading: const Icon(Icons.copy_rounded), title: const Text('Copiar texto'), onTap: () => Navigator.pop(contexto, 'copiar')),
+            if (texto.isNotEmpty)
+              ListTile(leading: const Icon(Icons.text_fields_rounded), title: const Text('Selecionar texto'), onTap: () => Navigator.pop(contexto, 'selecionar')),
             if (temHistorico)
               ListTile(leading: const Icon(Icons.history_rounded), title: const Text('Ver texto original'), onTap: () => Navigator.pop(contexto, 'historico')),
             if (podeApagar)
@@ -696,6 +698,8 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     } else if (opcao == 'copiar') {
       await Clipboard.setData(ClipboardData(text: texto));
       if (mounted) mostrarAviso(context, 'Texto copiado.');
+    } else if (opcao == 'selecionar') {
+      await _selecionarTexto(texto);
     } else if (opcao == 'editar') {
       await _editarMensagem(m);
     } else if (opcao == 'apagar') {
@@ -703,6 +707,23 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     } else if (opcao == 'historico') {
       await _verOriginal(m);
     }
+  }
+
+  Future<void> _selecionarTexto(String texto) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (contexto) => SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(contexto).size.height * .7),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+            child: SelectableText(texto, style: const TextStyle(fontSize: 17, height: 1.4)),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _verOriginal(Mensagem m) async {

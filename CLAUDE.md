@@ -69,6 +69,7 @@ pareamento). Correção feita num dos dois apps **não** vai sozinha pro outro.
   o app nos celulares** — manter backup. Não usar a chave do Ecossistema.
 - Versão 1.0.0 (03/10/2026) é a primeira; incrementar `version:` no
   `pubspec.yaml` a cada APK novo.
+- **1.0.14 (25/11/2026)**: "Selecionar texto" no menu de segurar a mensagem (copia só um trecho, como nome ou CPF). 1.0.13 em /root/backups/apps-2026-11-25/sent-1.0.13.apk.
 - **1.0.13 (25/11/2026)**: separador de dia como no WhatsApp (Hoje, Ontem, dia da semana, dd/mm/aaaa) e chip no topo da conversa ao rolar; editar/apagar mensagem (23/11). 1.0.12 em /root/backups/apps-2026-11-25/sent-1.0.12.apk.
 - **1.0.11 (20/11/2026)**: a semana mostra os horários bloqueados ("Bloquear horário" do sistema, `indisponiveis` do JSON) com cadeado; "Próximos 30 dias" também com os bloqueios desde 1.0.12 (pedido do usuário: melhor que dizer que não tem nada). 1.0.10 em /root/backups/apps-2026-11-20/sent-1.0.10.apk.
 - **1.0.10 (20/11/2026)**: aba renomeada para **Agendamentos** (igual ao sistema) e **vários responsáveis** por horário (`responsaveis` = "id,id" no salvar; JSON `responsavel_ids`/`responsaveis` e lista `responsaveis` = equipe). 1.0.9 em /root/backups/apps-2026-11-20/sent-1.0.9.apk.
