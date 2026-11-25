@@ -61,6 +61,10 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
   Mensagem? _respondendo;
   int? _destacada;
   final _chavesBaloes = <int, GlobalKey>{};
+  final _chaveLista = GlobalKey();
+  String? _diaNoTopo;
+  bool _mostrarDiaNoTopo = false;
+  Timer? _esconderDia;
 
   int get _ultimoId => _mensagens.fold(0, (maior, m) => m.id > maior ? m.id : maior);
   bool get _gravando => _gravandoDesde != null;
@@ -84,6 +88,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
           if (!longe) _novasMensagens = false;
         });
       }
+      _acompanharDiaNoTopo();
     });
     _buscar();
     _atualizacao = Timer.periodic(const Duration(seconds: 3), (_) => _buscar());
@@ -96,6 +101,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
     _salvarRascunho();
     _atualizacao?.cancel();
     _cronometro?.cancel();
+    _esconderDia?.cancel();
     _gravador.dispose();
     _texto.dispose();
     _busca.dispose();
@@ -876,6 +882,18 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
             child: Stack(
               children: [
                 Positioned.fill(child: _corpo()),
+                Positioned(
+                  top: 8,
+                  left: 0,
+                  right: 0,
+                  child: IgnorePointer(
+                    child: AnimatedOpacity(
+                      opacity: _mostrarDiaNoTopo && _diaNoTopo != null ? 1 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      child: Center(child: _ChipDia(texto: _diaNoTopo ?? '')),
+                    ),
+                  ),
+                ),
                 if (_longeDoFim || _novasMensagens) Positioned(right: 12, bottom: 12, child: _BotaoDescer(novas: _novasMensagens, aoTocar: _descer)),
               ],
             ),
@@ -987,6 +1005,7 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
       return Center(child: Text(_buscando && termo.isNotEmpty ? 'Nada encontrado para "${_busca.text.trim()}".' : 'Nenhuma mensagem ainda.'));
     }
     return ListView.builder(
+      key: _chaveLista,
       controller: _rolagem,
       reverse: true,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
@@ -1023,6 +1042,35 @@ class _ConversaScreenState extends State<ConversaScreen> with WidgetsBindingObse
   }
 
   bool _mesmoDia(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
+
+  void _acompanharDiaNoTopo() {
+    final lista = _chaveLista.currentContext?.findRenderObject() as RenderBox?;
+    if (lista == null || !lista.attached) return;
+    Mensagem? doTopo;
+    var menor = double.infinity;
+    for (final m in _mensagens) {
+      if (m.criadoEm == null) continue;
+      final caixa = _chavesBaloes[m.id]?.currentContext?.findRenderObject() as RenderBox?;
+      if (caixa == null || !caixa.attached || !caixa.hasSize) continue;
+      final topo = caixa.localToGlobal(Offset.zero, ancestor: lista).dy;
+      if (topo + caixa.size.height <= 0) continue;
+      if (topo < menor) {
+        menor = topo;
+        doTopo = m;
+      }
+    }
+    final rotulo = doTopo == null ? null : _rotuloDia(doTopo.criadoEm!);
+    if (rotulo != _diaNoTopo || !_mostrarDiaNoTopo) {
+      setState(() {
+        _diaNoTopo = rotulo;
+        _mostrarDiaNoTopo = rotulo != null;
+      });
+    }
+    _esconderDia?.cancel();
+    _esconderDia = Timer(const Duration(milliseconds: 1500), () {
+      if (mounted) setState(() => _mostrarDiaNoTopo = false);
+    });
+  }
 
   Widget _barraResposta(Mensagem m) {
     final c = context.cores;
@@ -1336,13 +1384,39 @@ class _SeparadorDia extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(12)),
-          child: Text(DateFormat("d 'de' MMMM", 'pt_BR').format(data), style: Theme.of(context).textTheme.bodySmall),
-        ),
+      child: Center(child: _ChipDia(texto: _rotuloDia(data))),
+    );
+  }
+}
+
+String _rotuloDia(DateTime data) {
+  final agora = DateTime.now();
+  final dia = DateTime(data.year, data.month, data.day);
+  final diferenca = (DateTime(agora.year, agora.month, agora.day).difference(dia).inHours / 24).round();
+  if (diferenca == 0) return 'Hoje';
+  if (diferenca == 1) return 'Ontem';
+  if (diferenca > 1 && diferenca < 7) {
+    final semana = DateFormat.EEEE('pt_BR').format(dia);
+    return semana[0].toUpperCase() + semana.substring(1);
+  }
+  return DateFormat('dd/MM/yyyy', 'pt_BR').format(dia);
+}
+
+class _ChipDia extends StatelessWidget {
+  const _ChipDia({required this.texto});
+
+  final String texto;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 3, offset: Offset(0, 1))],
       ),
+      child: Text(texto, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600)),
     );
   }
 }
